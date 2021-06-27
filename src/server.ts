@@ -1,5 +1,6 @@
 import type {Hook, CreateOptions} from "./plugin";
 import {serialize} from "./utils/serialize";
+import {createUrl} from "./utils/createUrl";
 import {findDependencies, renderPreloadLinks} from "./utils/html";
 import { renderToString } from "@vue/server-renderer";
 import { renderHeadToString } from "@vueuse/head";
@@ -10,7 +11,7 @@ declare global {
     }
 }
 export type Renderer = (
-    url?: string,
+    url: string|URL,
     options?: {
         manifest?: Record<string, string[]>
         preload?: boolean,
@@ -29,7 +30,7 @@ export const createViteSsrVue = (
     hook?: Hook
 ): Renderer => {
 
-    return async (url?, { manifest, preload = false, ...extra } = {}) => {
+    return async (url, { manifest, preload = false, ...extra } = {}) => {
         const {app, router, transformState} = creator();
         const transformer = transformState || serialize;
         const context: {
@@ -46,7 +47,9 @@ export const createViteSsrVue = (
         const { head } =
         (hook &&
             (await hook({
+                url: createUrl(url),
                 app,
+                router,
                 ...context,
             }))) ||
         {}

@@ -23,7 +23,9 @@ type HookResponse = void | {
 }
 
 export type Hook = (params: {
+    url?: URL | Location,
     app: App,
+    router?:Router,
     isClient: boolean
     initialState: Record<string, any>
 }) => HookResponse | Promise<HookResponse>

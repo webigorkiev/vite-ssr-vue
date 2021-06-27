@@ -16,13 +16,16 @@ export const createViteSsrVue = async(
     creator: () => CreateOptions,
     hook?: Hook
 ) => {
-    const {app, transformState} = creator();
+    const {app, router, transformState} = creator();
     const transformer = transformState || unserialize;
     const initialState =  await transformer(window.__INITIAL_STATE__);
+    const url = window.location;
 
     if(hook) {
         await hook({
+            url,
             app,
+            router,
             isClient: true,
             initialState: initialState
         })
