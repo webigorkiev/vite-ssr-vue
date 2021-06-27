@@ -9,7 +9,7 @@ declare global {
     }
 }
 
-export default createRouter({
+export default () => createRouter({
     history: import.meta.env.SSR ? createMemoryHistory() : createMemoryHistory(),
     routes: [
         { path: '/', component: HelloWorld },

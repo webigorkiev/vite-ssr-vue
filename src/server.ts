@@ -28,10 +28,10 @@ export const createViteSsrVue = (
     creator: () => CreateOptions,
     hook?: Hook
 ): Renderer => {
-    const {app, router, transformState} = creator();
-    const transformer = transformState || serialize;
 
     return async (url?, { manifest, preload = false, ...extra } = {}) => {
+        const {app, router, transformState} = creator();
+        const transformer = transformState || serialize;
         const context: {
             isClient: boolean,
             initialState: Record<string, any>
@@ -46,6 +46,7 @@ export const createViteSsrVue = (
         const { head } =
         (hook &&
             (await hook({
+                app,
                 ...context,
             }))) ||
         {}

@@ -23,6 +23,7 @@ type HookResponse = void | {
 }
 
 export type Hook = (params: {
+    app: App,
     isClient: boolean
     initialState: Record<string, any>
 }) => HookResponse | Promise<HookResponse>

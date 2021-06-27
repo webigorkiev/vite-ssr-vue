@@ -2,7 +2,7 @@ import {createViteSsrVue} from "../../src/client";
 import createApp from "./main";
 
 createViteSsrVue(
-    createApp(),
+    createApp,
     async({initialState}) => {
         console.log(initialState.myData);
     }

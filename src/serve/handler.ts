@@ -36,8 +36,7 @@ export const createHandler = (server: ViteDevServer, options: Options): Connect.
             const template = await readIndexTemplate(server, req.originalUrl);
             const entry = path.join(server.config.root, options.ssr);
             const ssrMoudile = await server.ssrLoadModule(entry);
-            const handler = ssrMoudile.default || ssrMoudile;
-            const render = handler();
+            const render = ssrMoudile.default || ssrMoudile;
             const htmlParts = await render(req.originalUrl);
             const html = buildHtml(template, htmlParts);
 
