@@ -1,0 +1,1 @@
+# vite-ssr-vue plugin
