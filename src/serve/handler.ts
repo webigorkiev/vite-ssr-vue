@@ -11,7 +11,7 @@ import {buildHtml} from "../utils/buildHtml";
  */
 const readIndexTemplate = async(server: ViteDevServer, url: string) => server.transformIndexHtml(
     url,
-    await fs.readFile(path.resolve(server.config.root, 'index.html'), 'utf-8')
+    await fs.readFile(path.resolve(server.config.root, "index.html"), "utf-8")
 );
 
 /**
@@ -27,7 +27,7 @@ export const createHandler = (server: ViteDevServer, options: Options): Connect.
 
     return async(req, res, next) => {
 
-        if(req.method !== 'GET' || !req.originalUrl) {
+        if(req.method !== "GET" || !req.originalUrl) {
 
             return next();
         }
@@ -41,7 +41,7 @@ export const createHandler = (server: ViteDevServer, options: Options): Connect.
             const htmlParts = await render(req.originalUrl);
             const html = buildHtml(template, htmlParts);
 
-            res.setHeader('Content-Type', 'text/html');
+            res.setHeader("Content-Type", "text/html");
             res.end(html);
         } catch(e) {
             server.ssrFixStacktrace(e);

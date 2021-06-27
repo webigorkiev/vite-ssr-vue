@@ -1,8 +1,8 @@
 import type {Hook, CreateOptions} from "./plugin";
 import {serialize} from "./utils/serialize";
 import {findDependencies, renderPreloadLinks} from "./utils/html";
-import { renderToString } from '@vue/server-renderer';
-import { renderHeadToString } from '@vueuse/head';
+import { renderToString } from "@vue/server-renderer";
+import { renderHeadToString } from "@vueuse/head";
 
 declare global {
     interface Window {
@@ -16,7 +16,7 @@ export type Renderer = (
         preload?: boolean,
         [key: string]: any
     }
-) => Promise<{ dependencies: string[] }>
+) => Promise<{ html: string, dependencies: string[] }>
 
 /**
  * Create client instance of vue app
@@ -60,7 +60,7 @@ export const createViteSsrVue = (
         }
 
         const body = await renderToString(app, context);
-        let { headTags = '', htmlAttrs = '', bodyAttrs = '' } = head
+        let { headTags = "", htmlAttrs = "", bodyAttrs = "" } = head
             ? renderHeadToString(head)
             : {};
         const dependencies = manifest ?
@@ -73,6 +73,7 @@ export const createViteSsrVue = (
         const initialState = await transformer(context.initialState || {});
 
         return {
+            html: `__VITE_SSR_HTML__`,
             htmlAttrs,
             headTags,
             body,

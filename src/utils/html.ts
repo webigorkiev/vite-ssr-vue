@@ -14,12 +14,12 @@ export const findDependencies = (
 }
 
 export const renderPreloadLinks = (files: string[]) => {
-  let link = ''
+  let link = ""
 
   for (const file of files || []) {
-    if (file.endsWith('.js')) {
+    if (file.endsWith(".js")) {
       link += `<link rel="modulepreload" crossorigin href="${file}">`
-    } else if (file.endsWith('.css')) {
+    } else if (file.endsWith(".css")) {
       link += `<link rel="stylesheet" href="${file}">`
     }
   }

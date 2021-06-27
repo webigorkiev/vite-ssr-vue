@@ -1,6 +1,6 @@
 import type {Plugin, Connect, ResolvedConfig, UserConfig} from "vite";
-import {createHandler} from "./development/handler";
-import type { HeadClient } from '@vueuse/head';
+import {createHandler} from "./serve/handler";
+import type { HeadClient } from "@vueuse/head";
 import type {App} from "vue";
 import type {Router} from "vue-router";
 import build from "./build";
@@ -32,7 +32,6 @@ export type Hook = (params: {
  * @param options
  */
 export default (options: Options): Plugin => {
-    process.env.SSR = "1";
 
     return {
         name: "vite-ssr-vue",
@@ -51,7 +50,7 @@ export default (options: Options): Plugin => {
                 await build(config, options);
                 process.exit(1);
             } else {
-                config.logger.info('\n -- SSR mode\n');
+                config.logger.info("\n -- SSR mode\n");
             }
         },
         async configureServer(server) {

@@ -1,9 +1,9 @@
-import { build, InlineConfig, mergeConfig, ResolvedConfig } from 'vite'
-import replace from '@rollup/plugin-replace'
-import { promises as fs } from 'fs'
-import path from 'path'
-import { buildHtml } from '../utils/buildHtml'
-import type { RollupOutput, OutputAsset } from 'rollup'
+import { build, InlineConfig, mergeConfig, ResolvedConfig } from "vite"
+import replace from "@rollup/plugin-replace"
+import { promises as fs } from "fs"
+import path from "path"
+import { buildHtml } from "../utils/buildHtml"
+import type { RollupOutput, OutputAsset } from "rollup"
 import type {Options} from "../plugin";
 
 type BuildOptions = {
@@ -21,29 +21,29 @@ export default async (
 ) => {
 
   // Client build
-  console.log("Client build", path.resolve(config.root, 'dist/client'));
+  console.log("Client build", path.resolve(config.root, "dist/client"));
   const clientBuildOptions = mergeConfig(
     {
       build: {
         isBuild: true,
-        outDir: path.resolve(config.root, 'dist/client'),
+        outDir: path.resolve(config.root, "dist/client"),
         ssrManifest: true,
       },
     },
     clientOptions
-  ) as NonNullable<BuildOptions['clientOptions']>
+  ) as NonNullable<BuildOptions["clientOptions"]>
   const clientResult = (await build(clientBuildOptions)) as RollupOutput;
   const indexHtml = clientResult.output.find(
-    (file) => file.type === 'asset' && file.fileName === 'index.html'
+    (file) => file.type === "asset" && file.fileName === "index.html"
   ) as OutputAsset
 
   // -- SSR build
-  console.log("SSR build", path.resolve(config.root, 'dist/server'));
+  console.log("SSR build", path.resolve(config.root, "dist/server"));
   const serverBuildOptions = mergeConfig(
     {
       build: {
         isBuild: true,
-        outDir: path.resolve(config.root, 'dist/server'),
+        outDir: path.resolve(config.root, "dist/server"),
         ssr: path.join(config.root, options.ssr),
         rollupOptions: {
           plugins: [
@@ -60,24 +60,24 @@ export default async (
       },
     },
     serverOptions
-  ) as NonNullable<BuildOptions['serverOptions']>
+  ) as NonNullable<BuildOptions["serverOptions"]>
   await build(serverBuildOptions);
 
   // --- Generate package.json
   const type =
     // @ts-ignore
-    serverBuildOptions.build?.rollupOptions?.output?.format === 'es'
-      ? 'module'
-      : 'commonjs'
+    serverBuildOptions.build?.rollupOptions?.output?.format === "es"
+      ? "module"
+      : "commonjs"
 
   // index.html is not used in SSR and might be served by mistake
   await fs
-    .unlink(path.join(clientBuildOptions.build?.outDir as string, 'index.html'))
+    .unlink(path.join(clientBuildOptions.build?.outDir as string, "index.html"))
     .catch(() => null)
 
   const packageJson = {
     type,
-    main: path.parse(serverBuildOptions.build?.ssr as string).name + '.js',
+    main: path.parse(serverBuildOptions.build?.ssr as string).name + ".js",
     ssr: {
       // This can be used later to serve static assets
       assets: (
@@ -88,7 +88,7 @@ export default async (
   }
 
   await fs.writeFile(
-    path.join(serverBuildOptions.build?.outDir as string, 'package.json'),
+    path.join(serverBuildOptions.build?.outDir as string, "package.json"),
     JSON.stringify(packageJson, null, 2)
   )
 }
