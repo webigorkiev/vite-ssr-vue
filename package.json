@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "@vue/server-renderer": "^3.1.2",
-    "@vueuse/head": "^0.6.0"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^2.4.2",
@@ -22,7 +21,8 @@
     "vue": "^3.0.5",
     "vue-router": "^4.0.10",
     "vue-tsc": "^0.0.24",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "@vueuse/head": "^0.6.0"
   },
   "license": "MIT"
 }
