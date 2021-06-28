@@ -1,20 +1,31 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
+    "target": "ES2019",
+    "module": "CommonJS",
+    "lib": ["ESNext", "DOM"],
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "checkJs": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
     "declaration": true,
-    "lib": ["esnext", "dom"]
+    "declarationMap": false,
+    "stripInternal": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": false,
+    "removeComments": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts"
+    "./src",
+  ],
+  "exclude": [
+    "./src/vue/*",
+    "./src/utils/*"
   ]
 }

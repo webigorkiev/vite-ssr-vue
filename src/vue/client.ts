@@ -1,6 +1,6 @@
 import {createSSRApp} from "vue";
-import type {ClientHandler} from "./plugin";
-import {unserialize} from "./utils/serialize";
+import type {ClientHandler} from "../plugin";
+import {unserialize} from "../utils/serialize";
 export { ClientOnly } from "./components";
 
 declare global {

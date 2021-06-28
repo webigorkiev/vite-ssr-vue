@@ -78,8 +78,8 @@ export default (opt:PluginOptions = {}): Plugin => {
     const options = opt as PluginOptionsInternal;
     options.name = options.name || "vite-ssr-vue";
     options.wrappers = {
-        client: path.resolve("./src/client"),
-        server: path.resolve("./src/server")
+        client: path.resolve("./src/vue/client"),
+        server: path.resolve("./src/vue/server")
     };
 
     return {

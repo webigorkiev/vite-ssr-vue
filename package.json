@@ -1,9 +1,13 @@
 {
+  "name": "vite-ssr-vue",
+  "description": "Vite utility for vue3 server side rendering",
   "version": "0.0.1",
-  "main": "./src/client.ts",
+  "main": "./src/vue/client.ts",
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build",
-    "lint": "eslint --ext .ts --ignore-path .gitignore ./src/**/*"
+    "build": "npm run build:cjs && npm run build:esm",
+    "lint": "eslint --ext .ts --ignore-path .gitignore ./src/**/*",
+    "build:cjs": "cd src && yarn tsc",
+    "build:esm": "cd src && yarn tsc --project tsconfig-esm.json"
   },
   "dependencies": {
     "@vue/server-renderer": "^3.1.2"
@@ -24,5 +28,19 @@
     "vuex": "^4.0.2",
     "@vueuse/head": "^0.6.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "vite",
+    "ssr",
+    "vue",
+    "vue3"
+  ],
+  "author": "webigorkiev",
+  "workspaces": [
+    "example"
+  ],
+  "bugs": {
+    "url": "https://github.com/webigorkiev/vite-ssr-vue/issues"
+  },
+  "homepage": "https://github.com/webigorkiev/vite-ssr-vue#readme"
 }
