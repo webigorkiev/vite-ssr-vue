@@ -6,7 +6,7 @@
     "lint": "eslint --ext .ts --ignore-path .gitignore ./src/**/*"
   },
   "dependencies": {
-    "@vue/server-renderer": "^3.1.2",
+    "@vue/server-renderer": "^3.1.2"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^2.4.2",
