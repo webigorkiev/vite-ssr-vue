@@ -1,5 +1,7 @@
-import type {Hook, CreateOptions} from "./plugin";
+import {createSSRApp} from "vue";
+import type {ClientHandler} from "./plugin";
 import {unserialize} from "./utils/serialize";
+export { ClientOnly } from "./components";
 
 declare global {
     interface Window {
@@ -9,27 +11,29 @@ declare global {
 
 /**
  * Create client instance of vue app
- * @param creator
- * @param hook
  */
-export const createViteSsrVue = async(
-    creator: () => CreateOptions,
-    hook?: Hook
-) => {
-    const {app, router, transformState} = creator();
-    const transformer = transformState || unserialize;
-    const initialState =  await transformer(window.__INITIAL_STATE__);
+export const createViteSsrVue:ClientHandler = async(App, options= {}) => {
+    const app = createSSRApp(App, options.rootProps);
+    const serializer = options.serializer || unserialize;
+    const initialState =  await serializer(window.__INITIAL_STATE__);
     const url = window.location;
 
-    if(hook) {
-        await hook({
+    if(options.created) {
+        const {store} = (await options.created({
             url,
             app,
-            router,
             isClient: true,
             initialState: initialState
-        })
+        })) || {};
+
+        if(store && initialState.state) {
+            store.replaceState(initialState.state);
+        }
     }
 
-    return app;
-}
+    app.mount(
+        options?.mount?.rootContainer||"#app",
+        options?.mount?.isHydrate||true,
+        options?.mount?.isSVG||false,
+    );
+};

@@ -7,7 +7,7 @@ const defaultHtmlParts = [
 ].reduce(
     (acc, item) => ({ ...acc, [item]: `\${${item}}` }),
     {} as Record<string, string>
-)
+);
 
 /**
  * Replace replace inserts to the value or!!! to the name of params
@@ -23,6 +23,8 @@ export const buildHtml = (template: string, parts = defaultHtmlParts): string =>
         .replace("</head>", `${parts.headTags}\n</head>`)
         .replace(
             "<div id=\"app\"></div>",
+
+            // eslint-disable-next-line max-len
             `<div id="app" data-server-rendered="true">${parts.body}</div>\n\n<script>window.__INITIAL_STATE__=${parts.initialState}</script>`
-        )
-}
+        );
+};

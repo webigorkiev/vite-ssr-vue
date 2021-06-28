@@ -1,5 +1,8 @@
-import {createRouter, createWebHashHistory, createMemoryHistory} from "vue-router";
-import HelloWorld from '../components/HelloWorld.vue'
+import {createRouter, createMemoryHistory, createWebHistory} from "vue-router";
+import HelloWorld from "../components/HelloWorld.vue";
+import HelloVueRouter from "../components/HelloVueRouter.vue";
+import HelloVuex from "../components/HelloVuex.vue";
+import HelloVite from "../components/HelloVite.vue";
 
 declare global {
     interface ImportMeta {
@@ -10,8 +13,11 @@ declare global {
 }
 
 export default () => createRouter({
-    history: import.meta.env.SSR ? createMemoryHistory() : createMemoryHistory(),
+    history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
     routes: [
-        { path: '/', component: HelloWorld },
+        { path: "/", component: HelloWorld },
+        { path: "/router", component: HelloVueRouter },
+        { path: "/vuex", component: HelloVuex },
+        { path: "/vite", component: HelloVite },
     ]
 });

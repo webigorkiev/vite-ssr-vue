@@ -1,19 +1,20 @@
-import { build, InlineConfig, mergeConfig, ResolvedConfig } from "vite"
-import replace from "@rollup/plugin-replace"
-import { promises as fs } from "fs"
-import path from "path"
-import { buildHtml } from "../utils/buildHtml"
-import type { RollupOutput, OutputAsset } from "rollup"
-import type {Options} from "../plugin";
+import { build, InlineConfig, mergeConfig, ResolvedConfig } from "vite";
+import replace from "@rollup/plugin-replace";
+import { promises as fs } from "fs";
+import path from "path";
+import { buildHtml } from "../utils/buildHtml";
+import type { RollupOutput, OutputAsset } from "rollup";
+import type {PluginOptionsInternal} from "../plugin";
+import {entryFromTemplate} from "../utils/entryFromTemplate";
 
 type BuildOptions = {
   clientOptions?: InlineConfig
   serverOptions?: InlineConfig & { packageJson?: Record<string, unknown> }
 }
 
-export default async (
+export const rollupBuild = async(
     config: ResolvedConfig,
-    options: Options,
+    options: PluginOptionsInternal,
     {
       clientOptions = {},
       serverOptions = {},
@@ -21,7 +22,6 @@ export default async (
 ) => {
 
   // Client build
-  console.log("Client build", path.resolve(config.root, "dist/client"));
   const clientBuildOptions = mergeConfig(
     {
       build: {
@@ -31,28 +31,39 @@ export default async (
       },
     },
     clientOptions
-  ) as NonNullable<BuildOptions["clientOptions"]>
+  ) as NonNullable<BuildOptions["clientOptions"]>;
   const clientResult = (await build(clientBuildOptions)) as RollupOutput;
   const indexHtml = clientResult.output.find(
     (file) => file.type === "asset" && file.fileName === "index.html"
-  ) as OutputAsset
+  ) as OutputAsset;
 
   // -- SSR build
-  console.log("SSR build", path.resolve(config.root, "dist/server"));
+  const entry = options.ssr || await entryFromTemplate(
+      await fs.readFile(path.resolve(config.root, "index.html"), "utf-8")
+  );
+
+  if(!entry) {
+    throw new Error("Entry point not found");
+  }
+  const entryResolved = path.join(
+      config.root,
+      entry
+  );
+  const html = buildHtml(
+      indexHtml.source as string
+  );
   const serverBuildOptions = mergeConfig(
     {
       build: {
         isBuild: true,
         outDir: path.resolve(config.root, "dist/server"),
-        ssr: path.join(config.root, options.ssr),
+        ssr: entryResolved,
         rollupOptions: {
           plugins: [
             replace({
               preventAssignment: true,
               values: {
-                __VITE_SSR_HTML__: buildHtml(
-                  indexHtml.source as string
-                ),
+                __VITE_SSR_VUE_HTML__: html,
               },
             }),
           ],
@@ -60,21 +71,17 @@ export default async (
       },
     },
     serverOptions
-  ) as NonNullable<BuildOptions["serverOptions"]>
+  ) as NonNullable<BuildOptions["serverOptions"]>;
   await build(serverBuildOptions);
 
-  // --- Generate package.json
-  const type =
-    // @ts-ignore
-    serverBuildOptions.build?.rollupOptions?.output?.format === "es"
-      ? "module"
-      : "commonjs"
-
-  // index.html is not used in SSR and might be served by mistake
+  // Unlink index.html
   await fs
-    .unlink(path.join(clientBuildOptions.build?.outDir as string, "index.html"))
-    .catch(() => null)
+      .unlink(path.join(clientBuildOptions.build?.outDir as string, "index.html"))
+      .catch(() => null);
 
+  // package.json
+  // @ts-ignore
+  const type = serverBuildOptions.build?.rollupOptions?.output?.format === "es" ? "module" : "commonjs";
   const packageJson = {
     type,
     main: path.parse(serverBuildOptions.build?.ssr as string).name + ".js",
@@ -85,10 +92,9 @@ export default async (
       ).filter((file) => !/(index\.html|manifest\.json)$/i.test(file)),
     },
     ...(serverBuildOptions.packageJson || {}),
-  }
-
+  };
   await fs.writeFile(
     path.join(serverBuildOptions.build?.outDir as string, "package.json"),
     JSON.stringify(packageJson, null, 2)
-  )
-}
+  );
+};

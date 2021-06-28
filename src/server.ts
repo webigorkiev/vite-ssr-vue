@@ -1,39 +1,20 @@
-import type {Hook, CreateOptions} from "./plugin";
+import type {SsrHandler} from "./plugin";
+import {createSSRApp} from "vue";
+import {renderToString} from "@vue/server-renderer";
 import {serialize} from "./utils/serialize";
 import {createUrl} from "./utils/createUrl";
-import {findDependencies, renderPreloadLinks} from "./utils/html";
-import { renderToString } from "@vue/server-renderer";
-import { renderHeadToString } from "@vueuse/head";
-
-declare global {
-    interface Window {
-        __INITIAL_STATE__:any;
-    }
-}
-export type Renderer = (
-    url: string|URL,
-    options?: {
-        manifest?: Record<string, string[]>
-        preload?: boolean,
-        [key: string]: any
-    }
-) => Promise<{ html: string, dependencies: string[] }>
+import {renderHeadToString} from "@vueuse/head";
+import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "./utils/html";
 
 /**
  * Create client instance of vue app
- * @param creator
- * @param hook
- * @returns render function
  */
-export const createViteSsrVue = (
-    creator: () => CreateOptions,
-    hook?: Hook
-): Renderer => {
+export const createViteSsrVue:SsrHandler = (App, options= {}) => {
 
-    return async (url, { manifest, preload = false, ...extra } = {}) => {
-        const {app, router, transformState} = creator();
-        const transformer = transformState || serialize;
-        const context: {
+    return async(url, {manifest, ...extra } = {}) => {
+        const app = createSSRApp(App, options.rootProps);
+        const serializer = options.serializer || serialize;
+        const ssrContext: {
             isClient: boolean,
             initialState: Record<string, any>
             [key: string]: any
@@ -43,47 +24,64 @@ export const createViteSsrVue = (
             initialState: {},
             ...extra,
         };
-
-        const { head } =
-        (hook &&
-            (await hook({
+        const { head, router, store, inserts, context } =
+        (options.created &&
+            (await options.created({
                 url: createUrl(url),
                 app,
-                router,
-                ...context,
+                ...ssrContext,
             }))) ||
-        {}
+        {};
 
+        // Router default behavior
         if(router && url) {
             await router.push(url);
             await router.isReady();
-            Object.assign(
-                context.initialState,
-                (router.currentRoute.value.meta || {}).state || {}
-            )
         }
 
-        const body = await renderToString(app, context);
-        let { headTags = "", htmlAttrs = "", bodyAttrs = "" } = head
-            ? renderHeadToString(head)
-            : {};
-        const dependencies = manifest ?
-            findDependencies(context.modules, manifest)
-            : []
-
-        if (preload && dependencies.length > 0) {
-            headTags += renderPreloadLinks(dependencies)
+        // store default behavior
+        if(store) {
+            ssrContext.initialState.state = store.state;
         }
-        const initialState = await transformer(context.initialState || {});
+
+        const body = inserts?.body || await renderToString(app, Object.assign(ssrContext, context || {}));
+        let headTags = inserts?.headTags || "",
+            htmlAttrs = inserts?.htmlAttrs || "",
+            bodyAttrs = inserts?.bodyAttrs || "",
+            dependencies = inserts?.dependencies || [];
+
+        // head default behavior
+        if(head) {
+            ({headTags, htmlAttrs, bodyAttrs} = renderHeadToString(head));
+        }
+
+        if(manifest) {
+            const {preload, prefetch} = findDependencies(
+                ssrContext.modules,
+                manifest,
+                options.shouldPreload,
+                options.shouldPrefetch
+            );
+            dependencies =  preload;
+
+            if(preload.length > 0) {
+                headTags += "\n" + renderPreloadLinks(preload).join("\n");
+            }
+
+            if(prefetch.length > 0) {
+                headTags += "\n" + renderPrefetchLinks(prefetch).join("\n");
+            }
+        }
+        const initialState = await serializer(ssrContext.initialState || {});
 
         return {
-            html: `__VITE_SSR_HTML__`,
+            html: `__VITE_SSR_VUE_HTML__`,
             htmlAttrs,
             headTags,
             body,
             bodyAttrs,
             initialState,
             dependencies
-        }
-    }
-}
+        };
+    };
+};
