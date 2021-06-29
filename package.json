@@ -1,32 +1,43 @@
 {
   "name": "vite-ssr-vue",
+  "private": true,
   "description": "Vite utility for vue3 server side rendering",
-  "version": "0.0.1",
-  "main": "./src/vue/client.ts",
+  "version": "0.1.1",
+  "main": "./client.js",
+  "types": "./client.d.ts",
   "scripts": {
-    "build": "npm run build:cjs && npm run build:esm",
-    "lint": "eslint --ext .ts --ignore-path .gitignore ./src/**/*",
-    "build:cjs": "cd src && yarn tsc",
-    "build:esm": "cd src && yarn tsc --project tsconfig-esm.json"
+    "build": "node scripts/build.js",
+    "dev": "node scripts/build.js --dev",
+    "lint": "eslint --ext .ts --ignore-path .gitignore ./src/**/*"
   },
   "dependencies": {
-    "@vue/server-renderer": "^3.1.2"
+    "@rollup/plugin-replace": "^2.4.2",
+    "@vue/server-renderer": "^3.1.2",
+    "@vueuse/head": "^0.6.0"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^2.4.2",
+    "@rollup/plugin-alias": "^3.1.2",
+    "@types/jest": "^26.0.23",
     "@types/node": "^15.12.4",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
+    "@vueuse/head": "^0.6.0",
+    "chalk": "^4.1.1",
+    "esbuild": "^0.12.12",
     "eslint": "^7.29.0",
+    "fs-extra": "^10.0.0",
+    "margv": "^1.1.1",
+    "rollup": "^2.52.3",
+    "rollup-plugin-dts": "^3.0.2",
+    "rollup-plugin-esbuild": "^4.5.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.8",
-    "vue": "^3.0.5",
+    "vite-ssr-vue": "^0.0.8",
+    "vue": "^3.1.2",
     "vue-router": "^4.0.10",
-    "vue-tsc": "^0.0.24",
-    "vuex": "^4.0.2",
-    "@vueuse/head": "^0.6.0"
+    "vuex": "^4.0.2"
   },
   "license": "MIT",
   "keywords": [
@@ -36,9 +47,6 @@
     "vue3"
   ],
   "author": "webigorkiev",
-  "workspaces": [
-    "example"
-  ],
   "bugs": {
     "url": "https://github.com/webigorkiev/vite-ssr-vue/issues"
   },

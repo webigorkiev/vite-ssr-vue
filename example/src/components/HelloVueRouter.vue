@@ -15,7 +15,7 @@
 
 <script lang="ts">
     import {defineComponent} from "vue";
-    import {ClientOnly} from "../../../";
+    import {ClientOnly} from "vite-ssr-vue";
 
     export default defineComponent({
         name: "HelloVueRouter",

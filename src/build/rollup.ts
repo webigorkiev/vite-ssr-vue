@@ -2,10 +2,10 @@ import { build, InlineConfig, mergeConfig, ResolvedConfig } from "vite";
 import replace from "@rollup/plugin-replace";
 import { promises as fs } from "fs";
 import path from "path";
-import { buildHtml } from "../utils/buildHtml";
+import { buildHtml } from "@/utils/buildHtml";
 import type { RollupOutput, OutputAsset } from "rollup";
-import type {PluginOptionsInternal} from "../plugin";
-import {entryFromTemplate} from "../utils/entryFromTemplate";
+import type {PluginOptionsInternal} from "@/plugin";
+import {entryFromTemplate} from "@/utils/entryFromTemplate";
 
 type BuildOptions = {
   clientOptions?: InlineConfig

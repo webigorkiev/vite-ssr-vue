@@ -28,7 +28,7 @@ export const serialize = (state: any): string => {
 
         throw new Error(`[SSR] On state serialization - ${e.message}`);
     }
-}
+};
 
 /**
  * Unserialize state
@@ -43,4 +43,4 @@ export const unserialize = (state: string): any => {
 
         throw new Error(`[SSR] On state unserialization - ${e.message}`);
     }
-}
+};

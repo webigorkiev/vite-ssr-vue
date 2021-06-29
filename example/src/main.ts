@@ -1,5 +1,4 @@
-// @ts-ignore
-import {createViteSsrVue} from "../../";
+import {createViteSsrVue} from "vite-ssr-vue";
 import App from "./App.vue";
 import createRouter from "./routes";
 import createStore from "./store";
@@ -20,7 +19,7 @@ export default createViteSsrVue(App, {
         return {router};
     },
     rootProps: {
-        name: "vite-srr-vue"
+        //name: "vite-ssr-vue"
     },
     shouldPreload(file, type) {
 

@@ -4,13 +4,13 @@ import HelloVueRouter from "../components/HelloVueRouter.vue";
 import HelloVuex from "../components/HelloVuex.vue";
 import HelloVite from "../components/HelloVite.vue";
 
-declare global {
-    interface ImportMeta {
-        env: {
-           SSR: boolean
-        };
-    }
-}
+// declare global {
+//     interface ImportMeta {
+//         env: {
+//            SSR: boolean
+//         };
+//     }
+// }
 
 export default () => createRouter({
     history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),

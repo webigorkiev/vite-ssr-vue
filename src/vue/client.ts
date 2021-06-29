@@ -1,6 +1,6 @@
 import {createSSRApp} from "vue";
-import type {ClientHandler} from "../plugin";
-import {unserialize} from "../utils/serialize";
+import type {ClientHandler} from "@/plugin";
+import {unserialize} from "@/utils/serialize";
 export { ClientOnly } from "./components";
 
 declare global {
@@ -19,12 +19,16 @@ export const createViteSsrVue:ClientHandler = async(App, options= {}) => {
     const url = window.location;
 
     if(options.created) {
-        const {store} = (await options.created({
+        const {store, router} = (await options.created({
             url,
             app,
             isClient: true,
             initialState: initialState
         })) || {};
+
+        if(router) {
+            await router.isReady();
+        }
 
         if(store && initialState.state) {
             store.replaceState(initialState.state);
@@ -34,6 +38,6 @@ export const createViteSsrVue:ClientHandler = async(App, options= {}) => {
     app.mount(
         options?.mount?.rootContainer||"#app",
         options?.mount?.isHydrate||true,
-        options?.mount?.isSVG||false,
+        options?.mount?.isSVG||true,
     );
 };

@@ -4,8 +4,6 @@ import type {HeadClient} from "@vueuse/head";
 import type {Router} from "vue-router";
 import type {Store} from "vuex";
 import type {SSRContext} from "@vue/server-renderer";
-
-import path from "path";
 import {createHandler} from "./serve/handler";
 import {rollupBuild} from "./build/rollup";
 
@@ -78,8 +76,8 @@ export default (opt:PluginOptions = {}): Plugin => {
     const options = opt as PluginOptionsInternal;
     options.name = options.name || "vite-ssr-vue";
     options.wrappers = {
-        client: path.resolve("./src/vue/client"),
-        server: path.resolve("./src/vue/server")
+        client: `${options.name}/client`,
+        server: `${options.name}/server`
     };
 
     return {
@@ -88,20 +86,20 @@ export default (opt:PluginOptions = {}): Plugin => {
 
             return {
                 ssr: {
-                    external: ["vite-ssr-vue"]
+                    noExternal: ["vite-ssr-vue"]
                 }
             } as UserConfig;
         },
-        async configResolved(config:ResolvedConfig): Promise<void> {
+        async configResolved(config:ResolvedConfig) {
             config.optimizeDeps.include = config.optimizeDeps.include || [];
             config.optimizeDeps.include.push(
-                options.wrappers.server,
-                options.wrappers.client
+                options.wrappers.client,
+                options.wrappers.server
             );
 
             if(config.command === "build") {
                 config.resolve.alias.push({
-                    find: options.name,
+                    find: new RegExp(`^${options.name}$`),
                     replacement: config.build.ssr ? options.wrappers.server : options.wrappers.client
                 });
 
@@ -112,11 +110,11 @@ export default (opt:PluginOptions = {}): Plugin => {
                 }
             } else {
                 config.resolve.alias.push({
-                    find: options.name,
+                    find: new RegExp(`^${options.name}$`),
                     replacement: options.wrappers.client
                 });
 
-                config.logger.info("\n -- SSR mode\n");
+                config.logger.info("\n --- SSR ---\n");
             }
         },
         async configureServer(server) {
@@ -125,5 +123,4 @@ export default (opt:PluginOptions = {}): Plugin => {
             return (): Connect.Server => server.middlewares.use(handler);
         }
     };
-
 };
