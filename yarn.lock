@@ -1543,10 +1543,10 @@ v8-compile-cache@^2.0.3:
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
   integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
 
-vite-ssr-vue@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/vite-ssr-vue/-/vite-ssr-vue-0.1.1.tgz#f2afba7581705a56d3de31981ff1f6fe02c79f98"
-  integrity sha512-oPDVt4e7gtmHahB2JAj/W64mIxaBO8lF/rW0tw3N+C3MdJ4WQ9bbYQM/sWqvS5NmPVJkbNL7IpKFuHZZipP1xA==
+vite-ssr-vue@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/vite-ssr-vue/-/vite-ssr-vue-0.1.2.tgz#1f4a1d44d356f9649925f84d9ae30f55c325bcd7"
+  integrity sha512-qaKScvG9f4zY/Uy+sQ71jo3xirSvIbTMeVJ67t3ZxY7SUaH9xffhl2SHyIzjaYi3xqZs95SygirI6N4Le7l1/g==
   dependencies:
     "@rollup/plugin-replace" "^2.4.2"
     "@vue/server-renderer" "^3.1.2"

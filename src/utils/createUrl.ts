@@ -1,3 +1,7 @@
+/**
+ * Create URL from string
+ * @param url
+ */
 export const createUrl = (url?: string | URL) => {
     url = url || "/";
 
@@ -6,7 +10,7 @@ export const createUrl = (url?: string | URL) => {
         return url;
     }
 
-    if (!(url || '').includes('://')) {
+    if(!(url || '').includes('://')) {
 
         url = 'http://e.g' + (url.startsWith("/") ? url : `/${url}`);
     }

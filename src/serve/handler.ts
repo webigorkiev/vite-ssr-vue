@@ -63,6 +63,8 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             res.end(html);
         } catch(e) {
             server.ssrFixStacktrace(e);
+
+            // eslint-disable-next-line no-console
             console.log(e.stack);
 
             throw e;

@@ -16,10 +16,10 @@ export default createViteSsrVue(App, {
         app.use(router);
         app.use(store);
 
-        return {router};
+        return {router, store};
     },
     rootProps: {
-        //name: "vite-ssr-vue"
+        test: "vite-ssr-vue"
     },
     shouldPreload(file, type) {
 

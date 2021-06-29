@@ -77,10 +77,10 @@ export const createViteSsrVue:SsrHandler = (App, options= {}) => {
 
         return {
             html: `__VITE_SSR_VUE_HTML__`,
-            htmlAttrs,
-            headTags,
+            htmlAttrs: htmlAttrs ? ` ${htmlAttrs} `: "",
+            bodyAttrs: bodyAttrs ? ` ${bodyAttrs} `: "",
+            headTags: headTags ? `${headTags}\n`: "",
             body,
-            bodyAttrs,
             initialState,
             dependencies
         };
