@@ -4,6 +4,7 @@ import {renderToString} from "@vue/server-renderer";
 import {serialize} from "@/utils/serialize";
 import {createUrl} from "@/utils/createUrl";
 import {renderHeadToString} from "@vueuse/head";
+export { ClientOnly } from "./components";
 import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils/html";
 
 /**

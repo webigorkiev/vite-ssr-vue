@@ -2,7 +2,7 @@
   "name": "vite-ssr-vue",
   "private": true,
   "description": "Vite utility for vue3 server side rendering",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./client.js",
   "types": "./client.d.ts",
   "scripts": {
@@ -34,7 +34,7 @@
     "rollup-plugin-esbuild": "^4.5.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.8",
-    "vite-ssr-vue": "^0.0.8",
+    "vite-ssr-vue": "^0.1.1",
     "vue": "^3.1.2",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
