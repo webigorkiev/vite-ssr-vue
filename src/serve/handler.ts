@@ -57,7 +57,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             const entryResolve = path.join(server.config.root, entry);
             const ssrMoudile = await server.ssrLoadModule(entryResolve);
             const render = ssrMoudile.default || ssrMoudile;
-            const htmlParts = await render(req.originalUrl);
+            const htmlParts = await render(req.originalUrl, {req, res});
             const html = buildHtml(template, htmlParts);
             res.setHeader("Content-Type", "text/html");
             res.end(html);

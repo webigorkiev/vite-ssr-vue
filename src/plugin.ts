@@ -86,7 +86,7 @@ export default (opt:PluginOptions = {}): Plugin => {
 
             return {
                 ssr: {
-                    noExternal: ["vite-ssr-vue"]
+                    noExternal: [options.name]
                 }
             } as UserConfig;
         },

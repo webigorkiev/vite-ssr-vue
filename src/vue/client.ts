@@ -1,5 +1,5 @@
 import {createSSRApp} from "vue";
-import type {ClientHandler} from "@/plugin";
+import type {ClientHandler, SsrHandler} from "@/plugin";
 import {unserialize} from "@/utils/serialize";
 export { ClientOnly } from "./components";
 
@@ -12,7 +12,7 @@ declare global {
 /**
  * Create client instance of vue app
  */
-const createViteSsrVue:ClientHandler = async(App, options= {}) => {
+const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
     const app = createSSRApp(App, options.rootProps);
     const serializer = options.serializer || unserialize;
     const initialState =  await serializer(window.__INITIAL_STATE__);
