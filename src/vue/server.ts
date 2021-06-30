@@ -10,7 +10,7 @@ import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils
 /**
  * Create client instance of vue app
  */
-export const createViteSsrVue:SsrHandler = (App, options= {}) => {
+const createViteSsrVue:SsrHandler = (App, options= {}) => {
 
     return async(url, {manifest, ...extra } = {}) => {
         const app = createSSRApp(App, options.rootProps);
@@ -66,11 +66,13 @@ export const createViteSsrVue:SsrHandler = (App, options= {}) => {
             dependencies =  preload;
 
             if(preload.length > 0) {
-                headTags += "\n" + renderPreloadLinks(preload).join("\n");
+                const links = renderPreloadLinks(preload);
+                headTags += (links.length ? "\n" + links.join("\n"): "");
             }
 
             if(prefetch.length > 0) {
-                headTags += "\n" + renderPrefetchLinks(prefetch).join("\n");
+                const links = renderPrefetchLinks(prefetch);
+                headTags += links.length ? "\n" + links.join("\n") : "";
             }
         }
         const initialState = await serializer(ssrContext.initialState || {});
@@ -86,3 +88,4 @@ export const createViteSsrVue:SsrHandler = (App, options= {}) => {
         };
     };
 };
+export default createViteSsrVue;

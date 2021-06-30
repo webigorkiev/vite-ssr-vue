@@ -1,4 +1,4 @@
-import {createViteSsrVue} from "vite-ssr-vue";
+import createSsr from "vite-ssr-vue";
 import App from "./App.vue";
 import createRouter from "./routes";
 import createStore from "./store";
@@ -9,7 +9,7 @@ import createStore from "./store";
  * plugin change alias for #vite-ssr-vue by the ssr or client version
  * automatically
  */
-export default createViteSsrVue(App, {
+export default createSsr(App, {
     created: ({app}) => {
         const router = createRouter();
         const store = createStore();

@@ -12,7 +12,7 @@ declare global {
 /**
  * Create client instance of vue app
  */
-export const createViteSsrVue:ClientHandler = async(App, options= {}) => {
+const createViteSsrVue:ClientHandler = async(App, options= {}) => {
     const app = createSSRApp(App, options.rootProps);
     const serializer = options.serializer || unserialize;
     const initialState =  await serializer(window.__INITIAL_STATE__);
@@ -26,10 +26,12 @@ export const createViteSsrVue:ClientHandler = async(App, options= {}) => {
             initialState: initialState
         })) || {};
 
+        // Router default behavior
         if(router) {
             await router.isReady();
         }
 
+        // Store default behavior
         if(store && initialState.state) {
             store.replaceState(initialState.state);
         }
@@ -41,3 +43,4 @@ export const createViteSsrVue:ClientHandler = async(App, options= {}) => {
         options?.mount?.isSVG||true,
     );
 };
+export default createViteSsrVue;
