@@ -106,7 +106,7 @@ export default (opt:PluginOptions = {}): Plugin => {
                 // @ts-ignore
                 if(!config.build.isBuild) {
                     await rollupBuild(config, options);
-                    process.exit(1);
+                    process.exit(0);
                 }
             } else {
                 config.resolve.alias.push({
