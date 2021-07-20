@@ -1,4 +1,4 @@
-import type {SsrHandler} from "@/plugin";
+import type {SsrHandler, Context} from "@/plugin";
 import {createSSRApp} from "vue";
 import {renderToString} from "@vue/server-renderer";
 import {serialize} from "@/utils/serialize";
@@ -6,6 +6,7 @@ import {createUrl} from "@/utils/createUrl";
 import {renderHeadToString} from "@vueuse/head";
 export { ClientOnly } from "./components";
 import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils/html";
+export type {Context};
 
 /**
  * Create client instance of vue app

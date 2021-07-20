@@ -52,7 +52,8 @@ type Hook = (params: {
     app: App
     url: URL | Location
     isClient: boolean
-    initialState: Record<string, any>
+    initialState: Record<string, any>,
+    [key: string]: any
 }) => HookResponse | Promise<HookResponse>
 type HookResponse = void | {
     head?: HeadClient,
@@ -67,6 +68,14 @@ type HookResponse = void | {
     },
     context?:SSRContext
 }
+export interface Context {
+    hostname: string,
+    protocol: string,
+    url: string,
+    cookies: Record<string, any>,
+    ip: string,
+    memcache: number|null
+};
 
 /**
  * Vite plugin vite-ssr-vue
