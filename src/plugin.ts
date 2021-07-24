@@ -75,6 +75,8 @@ export interface Context {
     cookies: Record<string, any>,
     ip: string,
     memcache: number|null,
+    statusCode: number,
+    headers: Record<string, any>
 }
 
 /**

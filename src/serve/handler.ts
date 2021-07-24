@@ -66,11 +66,14 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 url: req.url || "/",
                 cookies: cookieParse(headers["cookie"]),
                 ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress,
-                memcache: null
+                memcache: null,
+                statusCode: 200,
+                headers: {"content-type": "text/html; charset=utf-8"}
             };
             const htmlParts = await render(req.originalUrl, {req, res, context});
             const html = buildHtml(template, htmlParts);
-            res.setHeader("Content-Type", "text/html");
+            res.statusCode = context.statusCode;
+            Object.keys(context.headers).map(key => res.setHeader(key, context.headers[key]));
             res.end(html);
         } catch(e) {
             server.ssrFixStacktrace(e);
