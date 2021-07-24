@@ -74,8 +74,8 @@ export interface Context {
     url: string,
     cookies: Record<string, any>,
     ip: string,
-    memcache: number|null
-};
+    memcache: number|null,
+}
 
 /**
  * Vite plugin vite-ssr-vue

@@ -37,7 +37,11 @@ const createViteSsrVue:SsrHandler = (App, options= {}) => {
 
         // Router default behavior
         if(router && url) {
-            await router.push(url);
+            const err = await router.push(url);
+
+            if(err) {
+                throw new Error("404 Not Found");
+            }
             await router.isReady();
         }
 
