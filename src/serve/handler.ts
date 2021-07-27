@@ -77,7 +77,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 statusCode: 200,
                 headers: {"content-type": "text/html; charset=utf-8"}
             };
-            const htmlParts = await render(req.originalUrl, {req, response, context});
+            const htmlParts = await render(req.originalUrl, {req, res: response, context});
             const html = buildHtml(template, htmlParts);
             response.statusCode = context.statusCode;
             Object.keys(context.headers).map(key => response.setHeader(key, context.headers[key]));
