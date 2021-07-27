@@ -84,11 +84,6 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             response.end(html);
         } catch(e) {
             server.ssrFixStacktrace(e);
-
-            // eslint-disable-next-line no-console
-            console.log(e.stack);
-
-            throw e;
         } finally {
             replaceEnteryPoint(server, options.name, options.wrappers.client);
         }
