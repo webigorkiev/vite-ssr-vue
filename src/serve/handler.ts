@@ -6,6 +6,7 @@ import path from "path";
 import {buildHtml} from "@/utils/buildHtml";
 import {entryFromTemplate} from "@/utils/entryFromTemplate";
 import {cookieParse} from "@/utils/cookieParser";
+import * as http from "http";
 
 /**
  * Read and transform index.html
@@ -42,11 +43,17 @@ const replaceEnteryPoint = (server: ViteDevServer, name: string, wrapper: string
 export const createHandler = (server: ViteDevServer, options: PluginOptionsInternal): Connect.NextHandleFunction => {
 
     return async(req, res, next) => {
+        const response = res as http.ServerResponse & {redirect: (url: string, statusCode: 301|307) => void};
 
         if(req.method !== "GET" || !req.originalUrl) {
 
             return next();
         }
+        response.redirect = (url: string, statusCode: 301|307 = 307) => {
+            response.statusCode = statusCode;
+            response.setHeader("location", url);
+            response.end();
+        };
 
         try {
             replaceEnteryPoint(server, options.name, options.wrappers.server);
@@ -70,11 +77,11 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 statusCode: 200,
                 headers: {"content-type": "text/html; charset=utf-8"}
             };
-            const htmlParts = await render(req.originalUrl, {req, res, context});
+            const htmlParts = await render(req.originalUrl, {req, response, context});
             const html = buildHtml(template, htmlParts);
-            res.statusCode = context.statusCode;
-            Object.keys(context.headers).map(key => res.setHeader(key, context.headers[key]));
-            res.end(html);
+            response.statusCode = context.statusCode;
+            Object.keys(context.headers).map(key => response.setHeader(key, context.headers[key]));
+            response.end(html);
         } catch(e) {
             server.ssrFixStacktrace(e);
 
