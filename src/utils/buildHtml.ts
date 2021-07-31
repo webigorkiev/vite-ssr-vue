@@ -25,6 +25,6 @@ export const buildHtml = (template: string, parts = defaultHtmlParts): string =>
             "<div id=\"app\"></div>",
 
             // eslint-disable-next-line max-len
-            `<div id="app" data-server-rendered="true">${parts.body}</div>\n<script>window.__INITIAL_STATE__=${parts.initialState}</script>`
+            `${parts.body}\n<script>window.__INITIAL_STATE__=${parts.initialState}</script>`
         );
 };
