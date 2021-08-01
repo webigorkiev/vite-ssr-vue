@@ -75,12 +75,13 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress,
                 memcache: null,
                 statusCode: 200,
-                headers: {"content-type": "text/html; charset=utf-8"}
+                headers: req.headers,
+                responseHeaders: {"content-type": "text/html; charset=utf-8"},
             };
             const htmlParts = await render(req.originalUrl, {req, res: response, context});
             const html = buildHtml(template, htmlParts);
             response.statusCode = context.statusCode;
-            Object.keys(context.headers).map(key => response.setHeader(key, context.headers[key]));
+            Object.keys(context.responseHeaders).map(key => response.setHeader(key, context.responseHeaders[key]));
             response.end(html);
         } catch(e) {
             server.ssrFixStacktrace(e);

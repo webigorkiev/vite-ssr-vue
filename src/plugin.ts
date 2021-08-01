@@ -76,7 +76,8 @@ export interface Context {
     ip: string,
     memcache: number|null,
     statusCode: number,
-    headers: Record<string, any>
+    headers: Record<string, any>,
+    responseHeaders: Record<string, any>,
 }
 
 /**
