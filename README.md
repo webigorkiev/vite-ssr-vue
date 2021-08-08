@@ -14,7 +14,7 @@ Inspired by vite-ssr
 Create a normal Vite project for Vue3.
 
 ```bash
-    yarn add vite-ssr-vue
+    yarn add vite-ssr-vue @vue/server-renderer @vueuse/head node-html-parser @rollup/plugin-replace 
 ```
 
 ## Usage
