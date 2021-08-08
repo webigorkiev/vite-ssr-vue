@@ -49,9 +49,12 @@ export const rollupBuild = async(
       config.root,
       entry
   );
+
+  // Create html template
   const html = buildHtml(
       indexHtml.source as string
   );
+
   const serverBuildOptions = mergeConfig(
     {
       build: {

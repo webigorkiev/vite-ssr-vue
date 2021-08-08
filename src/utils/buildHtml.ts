@@ -20,11 +20,11 @@ export const buildHtml = (template: string, parts = defaultHtmlParts): string =>
     return template
         .replace("<html", `<html${parts.htmlAttrs}`)
         .replace("<body", `<body${parts.bodyAttrs}`)
-        .replace("</head>", `${parts.headTags}</head>`)
+        .replace("</head>", `${parts.headTags ? `${parts.headTags}\n`: ""}</head>`)
         .replace(
             "<div id=\"app\"></div>",
 
             // eslint-disable-next-line max-len
-            `<div id="app" data-server-rendered="true">${parts.body}</div>\n<script>window.__INITIAL_STATE__=${parts.initialState}</script>`
+            `<div id="app" data-server-rendered="true">${parts.body}</div><script>window.__INITIAL_STATE__=${parts.initialState}</script>`
         );
 };

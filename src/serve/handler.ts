@@ -4,6 +4,7 @@ import type {Context} from "@/plugin";
 import {promises as fs} from "fs";
 import path from "path";
 import {buildHtml} from "@/utils/buildHtml";
+import {teleportsInject} from "@/utils/teleportsInject";
 import {entryFromTemplate} from "@/utils/entryFromTemplate";
 import {cookieParse} from "@/utils/cookieParser";
 import * as http from "http";
@@ -79,7 +80,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 responseHeaders: {"content-type": "text/html; charset=utf-8"},
             };
             const htmlParts = await render(req.originalUrl, {req, res: response, context});
-            const html = buildHtml(template, htmlParts);
+            const html = teleportsInject(buildHtml(template, htmlParts),htmlParts.teleports);
             response.statusCode = context.statusCode;
             Object.keys(context.responseHeaders).map(key => response.setHeader(key, context.responseHeaders[key]));
             response.end(html);

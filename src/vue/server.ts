@@ -6,7 +6,17 @@ import {createUrl} from "@/utils/createUrl";
 import {renderHeadToString} from "@vueuse/head";
 export { ClientOnly } from "./components";
 import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils/html";
+import {teleportsInject} from "@/utils/teleportsInject";
+
 export type {Context};
+
+interface Inserts {
+    body?:string,
+    headTags?:string,
+    htmlAttrs?:string,
+    bodyAttrs?:string,
+    dependencies?:string
+}
 
 /**
  * Create client instance of vue app
@@ -77,15 +87,17 @@ const createViteSsrVue:SsrHandler = (App, options= {}) => {
             }
         }
         const initialState = await serializer(ssrContext.initialState || {});
+        const teleports = ssrContext?.teleports || {};
 
         return {
-            html: `__VITE_SSR_VUE_HTML__`,
-            htmlAttrs: htmlAttrs ? ` ${htmlAttrs} `: "",
-            bodyAttrs: bodyAttrs ? ` ${bodyAttrs} `: "",
-            headTags: headTags ? `${headTags}\n`: "",
+            html: teleportsInject(`__VITE_SSR_VUE_HTML__`, teleports),
+            htmlAttrs,
+            bodyAttrs,
+            headTags,
             body,
             initialState,
-            dependencies
+            dependencies,
+            teleports
         };
     };
 };
