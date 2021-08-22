@@ -68,9 +68,10 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             const ssrMoudile = await server.ssrLoadModule(entryResolve);
             const render = ssrMoudile.default || ssrMoudile;
             const headers = req.headers as Record<string, any>;
+            const protocol = server.config?.server?.https ? "https" : "";
             const context: Context = {
                 hostname: headers.host,
-                protocol: headers["x-forwarded-proto"] || "http",
+                protocol: headers["x-forwarded-proto"] || protocol || "http",
                 url: req.url || "/",
                 cookies: cookieParse(headers["cookie"]),
                 ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress,
