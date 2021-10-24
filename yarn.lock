@@ -1150,14 +1150,6 @@
     "@vue/compiler-ssr" "3.2.19"
     "@vue/shared" "3.2.19"
 
-"@vue/server-renderer@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.1.2.tgz#fd5c4ac433cbcea4f44b9ef971ff612786e1d04f"
-  integrity sha512-XDw8KTrz/siiU5p6Zlicvf2KIjSZrqaxATBPM/9FYNnyv4LTS14JC5daTL13rk50d3UPBurRR/3wJupVvtQJ4w==
-  dependencies:
-    "@vue/compiler-ssr" "3.1.2"
-    "@vue/shared" "3.1.2"
-
 "@vue/shared@3.1.2", "@vue/shared@^3.0.11":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.1.2.tgz#1069c0bc7d6f4bd15ccf3a5f3be29450aca368f9"
@@ -5456,15 +5448,16 @@ vfile@^4.0.0, vfile@^4.0.1:
     unist-util-stringify-position "^2.0.0"
     vfile-message "^2.0.0"
 
-vite-ssr-vue@^0.2.18:
-  version "0.2.18"
-  resolved "https://registry.yarnpkg.com/vite-ssr-vue/-/vite-ssr-vue-0.2.18.tgz#cc68142a1623782107f18f3adbe221cae684ac78"
-  integrity sha512-99QU/ws0s82IZuq4R+69VlNNS7CFhjgUtqJ57FTc5I21KGnT95/D6RvU81QdVB1/EUW4oTA5PkGDHW+cUZIv9Q==
+vite-ssr-vue@^0.2.21:
+  version "0.2.21"
+  resolved "https://registry.yarnpkg.com/vite-ssr-vue/-/vite-ssr-vue-0.2.21.tgz#db25e3d5d2123229360cd7df8d0ccba989d6f4eb"
+  integrity sha512-JwpmtbpVd3aahh75Zl2uUpIIvzKrMdMIWItSZ/KNZ5Nl33+r2iMQyNrey3d/jGKiFatdVSr1YbwvqHGORA11aQ==
   dependencies:
     "@rollup/plugin-replace" "^2.4.2"
-    "@vue/server-renderer" "^3.1.2"
+    "@vue/server-renderer" "^3.2.19"
     "@vueuse/head" "^0.6.0"
     node-html-parser "^4.1.3"
+    typedoc "^0.22.6"
 
 vite@^2.3.8:
   version "2.3.8"

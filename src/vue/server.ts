@@ -1,4 +1,4 @@
-import type {SsrHandler, Context} from "@/plugin";
+import type {SsrHandler, Context} from "@/types.d";
 import {createSSRApp} from "vue";
 import {renderToString} from "@vue/server-renderer";
 import {serialize} from "@/utils/serialize";
@@ -9,14 +9,6 @@ import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils
 import {teleportsInject} from "@/utils/teleportsInject";
 
 export type {Context};
-
-interface Inserts {
-    body?:string,
-    headTags?:string,
-    htmlAttrs?:string,
-    bodyAttrs?:string,
-    dependencies?:string
-}
 
 /**
  * Create client instance of vue app

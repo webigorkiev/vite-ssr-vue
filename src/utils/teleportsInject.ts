@@ -28,4 +28,4 @@ export const teleportsInject = (body: string, teleports: Record<string, any> = {
     }
 
     return body;
-}
+};

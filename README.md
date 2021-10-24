@@ -9,6 +9,10 @@
 
 Inspired by vite-ssr
 
+## documentation
+
+https://webigorkiev.github.io/vite-ssr-vue/
+
 ## Installation
 
 Create a normal Vite project for Vue3.

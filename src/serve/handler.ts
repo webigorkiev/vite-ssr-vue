@@ -1,6 +1,6 @@
 import type {Connect, ViteDevServer} from "vite";
 import type {PluginOptionsInternal} from "@/plugin";
-import type {Context} from "@/plugin";
+import type {Context} from "@/types";
 import {promises as fs} from "fs";
 import path from "path";
 import {buildHtml} from "@/utils/buildHtml";
