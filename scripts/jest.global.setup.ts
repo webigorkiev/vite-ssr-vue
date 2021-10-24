@@ -6,10 +6,16 @@ declare global {
     var server: ViteDevServer;
 }
 
+const { setup: setupPuppeteer } = require('jest-environment-puppeteer');
+
 /**
  * Create Vite server
  */
 export default async(config: Record<string, any>) => {
+    await setupPuppeteer({
+        headless: false
+    });
+
     global.server = await createServer({
         server: {
             port: 3000

@@ -10,14 +10,18 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "lib": [
       "esnext",
       "dom",
     ],
     "types": [
+      "node",
       "vite/client",
       "@types/jest",
-      "node"
+      "puppeteer",
+      "jest-environment-puppeteer",
+      "expect-puppeteer"
     ],
     "baseUrl": ".",
     "paths": {

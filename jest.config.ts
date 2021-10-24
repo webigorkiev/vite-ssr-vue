@@ -24,8 +24,9 @@ const config: Config.InitialOptions = {
       tsconfig: './tsconfig.json'
     }
   },
-  testEnvironment: "jsdom",
-  modulePathIgnorePatterns: ['<rootDir>/dist']
+  //testEnvironment: "jsdom",
+  modulePathIgnorePatterns: ['<rootDir>/dist'],
+  preset: "jest-puppeteer"
 };
 
 export default config;
