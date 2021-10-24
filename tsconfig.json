@@ -4,6 +4,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
+    "noImplicitThis": true,
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
@@ -11,11 +12,12 @@
     "allowSyntheticDefaultImports": true,
     "lib": [
       "esnext",
-      "dom"
+      "dom",
     ],
     "types": [
       "vite/client",
-      "@types/jest"
+      "@types/jest",
+      "node"
     ],
     "baseUrl": ".",
     "paths": {
