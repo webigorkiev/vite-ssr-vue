@@ -4,7 +4,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { buildHtml } from "@/utils/buildHtml";
 import type { RollupOutput, OutputAsset } from "rollup";
-import type {PluginOptionsInternal} from "@/plugin";
+import type {PluginOptionsInternal} from "@/types";
 import {entryFromTemplate} from "@/utils/entryFromTemplate";
 
 type BuildOptions = {

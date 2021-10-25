@@ -2,17 +2,9 @@ import type {Plugin, Connect, ResolvedConfig, UserConfig} from "vite";
 import {createHandler} from "./serve/handler";
 import {rollupBuild} from "./build/rollup";
 
-import type {PluginOptions} from "./types";
+import type {PluginOptions, PluginOptionsInternal} from "./types";
+export type {PluginOptions, PluginOptionsInternal};
 
-export {PluginOptions};
-export interface PluginOptionsInternal {
-    name:string,
-    ssr?: string,
-    wrappers: {
-        client:string,
-        server:string
-    }
-}
 
 /**
  * Vite plugin vite-ssr-vue
@@ -64,7 +56,7 @@ export default (opt:PluginOptions = {}): Plugin => {
             }
         },
         async configureServer(server) {
-            const handler = createHandler(server, options);
+            const handler = opt.serve ? opt.serve(server, options) : createHandler(server, options);
 
             return (): Connect.Server => server.middlewares.use(handler);
         }
