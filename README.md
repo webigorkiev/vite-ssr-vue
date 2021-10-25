@@ -97,3 +97,43 @@ export default ssr(App, {
 
 </p>
 </details>
+
+## Accessing context, res and req objects
+
+In the built-in dev server, context, req, res objects are passing to created hook. 
+In production, you must pass these objects to the rendering function in order to have them available.
+
+```typescript
+
+({html} = await entry(url, {
+    manifest,
+    res,
+    req,
+    context
+}));
+```
+
+## Redirect
+
+The **redirect** method add to **res** object for development, and requires implementation in production.
+
+## ClientOnly
+
+Aka vite-ssr, vite-ssr-vue exports ClientOnly component that renders its children only in the browser:
+
+```vue
+
+import { ClientOnly } from "vite-ssr-vue"
+
+<div>
+  <ClientOnly>
+      <!--- your code  --->
+  </ClientOnly>
+</div>
+
+```
+
+## Production
+
+Run `vite build` for buildling your app. This will create 2 builds (client and server) that you can import and use from your Node backend.
+
