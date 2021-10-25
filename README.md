@@ -9,7 +9,17 @@
 
 Inspired by vite-ssr
 
-## documentation
+## Features
+
+- Fast HMR with vite
+- Easy development start
+- Small library size
+- Compatible with Vite's plugin
+- Support `teleports`
+- Flexible configuration and full control
+- Support `shouldPreload` and `shouldPrefetch`
+
+## Documentation
 
 https://webigorkiev.github.io/vite-ssr-vue/
 
