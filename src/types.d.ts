@@ -37,6 +37,16 @@ export interface PluginOptions {
     ssr?: string,
 
     /**
+     * way to custom entry points
+     * used for build production chunk
+     * * for develop custom implementation must be used
+     */
+    custom?: {
+        ws?: string,
+        [key: string]: string
+    }
+
+    /**
      * Custom serve middleware
      * @param server - instance of ViteDevServer
      * @param options - options extends PluginOptionsInternal

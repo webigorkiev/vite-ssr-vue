@@ -77,6 +77,22 @@ export const rollupBuild = async(
   ) as NonNullable<BuildOptions["serverOptions"]>;
   await build(serverBuildOptions);
 
+  // Addition custom chunk
+  if(options.custom) {
+    const chunks = Object.keys(options.custom);
+    for(const chunk of chunks) {
+      const entryResolved = path.join(config.root, options.custom[chunk]);
+      const buildOptions = mergeConfig({
+        build: {
+          isBuild: true,
+          outDir: path.resolve(config.root, `dist/${chunk}`),
+          ssr: entryResolved,
+        }
+      }, serverOptions) as NonNullable<BuildOptions["serverOptions"]>;
+      await build(buildOptions);
+    }
+  }
+
   // Unlink index.html
   await fs
       .unlink(path.join(clientBuildOptions.build?.outDir as string, "index.html"))
