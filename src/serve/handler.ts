@@ -72,7 +72,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             const context: Context = {
                 hostname: headers.host,
                 protocol: headers["x-forwarded-proto"] || protocol || "http",
-                url: req.url || "/",
+                url: req.originalUrl || "/",
                 cookies: cookieParse(headers["cookie"]),
                 ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress,
                 memcache: null,
