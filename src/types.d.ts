@@ -97,7 +97,7 @@ export interface CreatorOptions {
     created?:Hook,
 
     /**
-     * Fire after all internal operations, as router isReady, read manifest? create header tags
+     * Fire after all internal operations, as router isReady
      */
     mounted?:Hook,
 

@@ -7,13 +7,14 @@ import {renderHeadToString} from "@vueuse/head";
 export { ClientOnly } from "./components";
 import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils/html";
 import {teleportsInject} from "@/utils/teleportsInject";
+import type {CreatorOptions} from "@/types.d";
 
 export type {Context};
 
 /**
  * Create client instance of vue app
  */
-const createViteSsrVue:SsrHandler = (App, options= {}) => {
+const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
 
     return async(url, {manifest, ...extra } = {}) => {
         const app = createSSRApp(App, options.rootProps);
@@ -42,6 +43,14 @@ const createViteSsrVue:SsrHandler = (App, options= {}) => {
             await router.push(url);
             await router.isReady();
         }
+
+        options.mounted && (await options.mounted({
+            url: createUrl(url),
+            app,
+            router,
+            store,
+            ...ssrContext,
+        }));
 
         // store default behavior
         if(store) {
@@ -80,16 +89,6 @@ const createViteSsrVue:SsrHandler = (App, options= {}) => {
         }
         const initialState = await serializer(ssrContext.initialState || {});
         const teleports = ssrContext?.teleports || {};
-
-        options.mounted && (await options.mounted({
-            url: createUrl(url),
-            app,
-            head,
-            router,
-            store,
-            inserts,
-            ...ssrContext,
-        }));
 
         return {
             html: teleportsInject(`__VITE_SSR_VUE_HTML__`, teleports),
