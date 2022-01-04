@@ -24,7 +24,7 @@ export const serialize = (state: any): string => {
                 UNSAFE_CHARS_REGEXP,
                 escape
             );
-    } catch(e) {
+    } catch(e: any) {
 
         throw new Error(`[SSR] On state serialization - ${e.message}`);
     }
@@ -39,7 +39,7 @@ export const unserialize = (state: string): any => {
     try {
 
         return JSON.parse(state || "{}");
-    } catch(e) {
+    } catch(e: any) {
 
         throw new Error(`[SSR] On state unserialization - ${e.message}`);
     }

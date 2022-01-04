@@ -81,6 +81,16 @@ const createViteSsrVue:SsrHandler = (App, options= {}) => {
         const initialState = await serializer(ssrContext.initialState || {});
         const teleports = ssrContext?.teleports || {};
 
+        options.mounted && (await options.mounted({
+            url: createUrl(url),
+            app,
+            head,
+            router,
+            store,
+            inserts,
+            ...ssrContext,
+        }));
+
         return {
             html: teleportsInject(`__VITE_SSR_VUE_HTML__`, teleports),
             htmlAttrs,

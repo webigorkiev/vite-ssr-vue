@@ -18,14 +18,15 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
     const serializer = options.serializer || unserialize;
     const initialState =  await serializer(window.__INITIAL_STATE__);
     const url = window.location;
+    let store, router;
 
     if(options.created) {
-        const {store, router} = (await options.created({
+        ({store, router} = (await options.created({
             url,
             app,
             isClient: true,
             initialState: initialState
-        })) || {};
+        })) || {});
 
         // Router default behavior
         if(router) {
@@ -36,6 +37,17 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
         if(store && initialState.state) {
             store.replaceState(initialState.state);
         }
+    }
+
+    if(options.mounted) {
+        await options.mounted({
+            url,
+            app,
+            isClient: true,
+            initialState: initialState,
+            store,
+            router
+        });
     }
 
     app.mount(

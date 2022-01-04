@@ -3,7 +3,7 @@ const fs = require("fs-extra");
 const { gzipSync } = require('zlib');
 const margv = require("margv");
 const rollup = require("rollup");
-const esbuild  = require("rollup-plugin-esbuild");
+const {default:esbuild}  = require("rollup-plugin-esbuild");
 const {default:dts} = require("rollup-plugin-dts");
 const aliasPlugin = require("@rollup/plugin-alias");
 const chalk = require("chalk");
@@ -40,7 +40,8 @@ const external = [
     log("Copy files to dist dir");
     await buildPlugin(root);
     log("Build plugin");
-    await buildWrappers(root);
+    await buildWrappers("./src/vue/client.ts", path.resolve(root, "./client.mjs"));
+    await buildWrappers("./src/vue/server.ts", path.resolve(root, "./server.mjs"));
     log("Build wrappers");
     await buildTypes(root);
     log("Build types");
@@ -79,9 +80,9 @@ const buildPlugin = async(root) => {
  * Build esm modules wrappers for clien and server bundle
  * @returns {Promise<void>}
  */
-const buildWrappers = async(root) => {
+const buildWrappers = async(input, output) => {
     const bundle = await rollup.rollup({
-        input: ["./src/vue/client.ts", "./src/vue/server.ts"],
+        input: input, // ["./src/vue/client.ts", "./src/vue/server.ts"],
         external,
         plugins: [
             aliasPlugin({
@@ -95,8 +96,9 @@ const buildWrappers = async(root) => {
         ],
     });
     await bundle.write({
-        dir: root,
-        format: "esm"
+        //dir: root,
+        format: "esm",
+        file: output,
     });
     await bundle.close();
 };

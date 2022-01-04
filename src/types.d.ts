@@ -97,6 +97,11 @@ export interface CreatorOptions {
     created?:Hook,
 
     /**
+     * Fire after all internal operations, as router isReady, read manifest? create header tags
+     */
+    mounted?:Hook,
+
+    /**
      * allows you to override the default serialization
      * @param state
      */

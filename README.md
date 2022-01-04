@@ -89,6 +89,10 @@ export default ssr(App, {
         app.use(prefetch, router, store);
 
         return {head, router, store}
+    },
+    
+    mounted({router}) {
+        // Some actions with router in isReady moment
     }
 });
 

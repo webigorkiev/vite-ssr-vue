@@ -85,7 +85,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             response.statusCode = context.statusCode;
             Object.keys(context.responseHeaders).map(key => response.setHeader(key, context.responseHeaders[key]));
             response.end(html);
-        } catch(e) {
+        } catch(e: any) {
             server.ssrFixStacktrace(e);
         } finally {
             replaceEnteryPoint(server, options.name, options.wrappers.client);

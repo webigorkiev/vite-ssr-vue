@@ -12,4 +12,5 @@ const { teardown: teardownPuppeteer } = require('jest-environment-puppeteer');
 export default async() => {
     await teardownPuppeteer();
     await global.server.close();
+    await new Promise(resolve => setTimeout(resolve, 1000));
 };

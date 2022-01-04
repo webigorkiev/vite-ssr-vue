@@ -22,10 +22,10 @@ describe("Client", () => {
     beforeAll(async() => {
         await page.goto(testsConfig.host);
     });
-    it(`should be titled "Test vite-ssr-vue app"`, async() => {
-        await expect(page.title()).resolves.toMatch("Test vite-ssr-vue app");
+    it(`should be titled "Test vite-ssr-vue app"`, () => {
+        expect(page.title()).resolves.toMatch("Test vite-ssr-vue app");
     });
-    it(`should display "Hello World!" text on page`, async() => {
-        await expect(page).toMatch("Hello World!");
+    it(`should display "Hello World!" text on page`, () => {
+        expect(page.evaluate(() => document.body.innerHTML)).resolves.toMatch("Hello World!");
     });
 });
