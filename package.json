@@ -2,7 +2,7 @@
   "name": "vite-ssr-vue",
   "private": true,
   "description": "Vite utility for vue3 server side rendering",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "main": "./client.mjs",
   "types": "./client.d.ts",
   "scripts": {
@@ -47,7 +47,7 @@
     "ts-node": "^10.4.0",
     "typedoc": "^0.22.6",
     "typescript": "^4.3.2",
-    "vite": "2.7.9",
+    "vite": "2.6.13",
     "vite-ssr-vue": "^0.4.4",
     "vue": "^3.2.26",
     "vue-jest": "^5.0.0-alpha.10",
