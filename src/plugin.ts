@@ -37,7 +37,7 @@ export default (opt:PluginOptions = {}): Plugin => {
 
             if(config.command === "build") {
                 config.resolve.alias.push({
-                    find: new RegExp(`^${options.name}(.*)$`),
+                    find: new RegExp(`^${options.name}$`),
                     replacement: config.build.ssr ? options.wrappers.server : options.wrappers.client
                 });
 
@@ -47,8 +47,10 @@ export default (opt:PluginOptions = {}): Plugin => {
                     process.exit(0);
                 }
             } else {
+
+                // Only for then replace in handler
                 config.resolve.alias.push({
-                    find: new RegExp(`^${options.name}(.*)$`),
+                    find: new RegExp(`^${options.name}$`),
                     replacement: options.wrappers.client
                 });
 

@@ -33,7 +33,6 @@ const replaceEnteryPoint = (server: ViteDevServer, name: string, wrapper: string
     if(alias) {
         alias.replacement = wrapper;
     }
-
 };
 
 /**
