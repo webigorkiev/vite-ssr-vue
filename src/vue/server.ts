@@ -9,7 +9,7 @@ import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils
 import {teleportsInject} from "@/utils/teleportsInject";
 import type {CreatorOptions} from "@/types.d";
 
-export type {Context};
+export type {Context, CreatorOptions};
 
 /**
  * Create client instance of vue app

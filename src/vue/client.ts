@@ -1,8 +1,8 @@
 import {createSSRApp} from "vue";
-import type {ClientHandler, SsrHandler, Context} from "@/types.d";
+import type {ClientHandler, SsrHandler, Context, CreatorOptions} from "@/types.d";
 import {unserialize} from "@/utils/serialize";
 export { ClientOnly } from "./components";
-export type {Context};
+export type {Context, CreatorOptions};
 
 declare global {
     interface Window {
