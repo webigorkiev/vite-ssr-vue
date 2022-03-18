@@ -33,6 +33,29 @@ Create a normal Vite project for Vue3.
 
 ## Usage
 
+### vite > 2.7.9
+
+There is no way to use a single entry point.
+
+```typescript
+// entry-client.ts
+import ssr from "vite-ssr-vue/client";
+import App from "./App.vue";
+
+export default ssr(App);
+```
+
+```typescript
+// entry-server.ts
+import ssr from "vite-ssr-vue/server";
+import App from "./App.vue";
+
+export default ssr(App);
+```
+
+
+### vite <= 2.7.9
+
 ```typescript
 // vite.config.js
 import vue from "@vitejs/plugin-vue";

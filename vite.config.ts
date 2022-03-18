@@ -4,7 +4,9 @@ import ssr from "vite-ssr-vue/plugin";
 
 export default defineConfig({
     plugins: [
-        ssr(),
+        ssr({
+            ssr: "/tests/playground/entry-server.ts"
+        }),
         vue()
     ]
 });
