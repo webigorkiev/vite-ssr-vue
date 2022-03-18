@@ -1,4 +1,4 @@
-import parser from "node-html-parser";
+import {parse} from "node-html-parser";
 
 /**
  * Add teleports to html
@@ -9,7 +9,7 @@ export const teleportsInject = (body: string, teleports: Record<string, any> = {
     const teleportsKeys = Object.keys(teleports);
 
     if(teleportsKeys.length) {
-        const root = parser(body, {comment: true});
+        const root = parse(body, {comment: true});
 
         teleportsKeys.map((key:string) => {
             const el = root.querySelector(key);
@@ -17,9 +17,9 @@ export const teleportsInject = (body: string, teleports: Record<string, any> = {
             if(el) {
 
                 if(el.childNodes) {
-                    el.childNodes.unshift(parser(teleports[key], {comment: true}));
+                    el.childNodes.unshift(parse(teleports[key], {comment: true}));
                 } else {
-                    el.appendChild(parser(teleports[key], {comment: true}));
+                    el.appendChild(parse(teleports[key], {comment: true}));
                 }
             }
         });
