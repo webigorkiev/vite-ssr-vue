@@ -38,7 +38,7 @@ export const rollupBuild = async(
   ) as OutputAsset;
 
   // -- SSR build
-  const entry = options.ssr || await entryFromTemplate(
+  const entry = options.ssr || entryFromTemplate(
       await fs.readFile(path.resolve(config.root, "index.html"), "utf-8")
   );
 
@@ -101,8 +101,15 @@ export const rollupBuild = async(
   // package.json
   // @ts-ignore
   const type = serverBuildOptions.build?.rollupOptions?.output?.format === "es" ? "module" : "commonjs";
+  
+  // Create package.json with version
+  let pkg = {} as Record<string, any>;
+  try {
+    pkg = JSON.parse((await fs.readFile(path.resolve(config.root, "./package.json"))).toString());
+  } catch(e) {}
   const packageJson = {
     type,
+    version: pkg.version || "",
     main: path.parse(serverBuildOptions.build?.ssr as string).name + ".js",
     ssr: {
       // This can be used later to serve static assets
