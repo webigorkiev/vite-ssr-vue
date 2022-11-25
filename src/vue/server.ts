@@ -65,7 +65,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
 
         // head default behavior
         if(head) {
-            ({headTags, htmlAttrs, bodyAttrs} = renderHeadToString(head));
+            ({headTags, htmlAttrs, bodyAttrs} = await renderHeadToString(head));
         }
 
         if(manifest) {
