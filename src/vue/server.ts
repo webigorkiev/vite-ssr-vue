@@ -16,6 +16,7 @@ export type {Context, CreatorOptions};
  */
 const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
 
+    // manifest - for prod build
     return async(url, {manifest, ...extra } = {}) => {
         const app = createSSRApp(App, options.rootProps);
         const serializer = options.serializer || serialize;
