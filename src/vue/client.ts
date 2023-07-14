@@ -25,7 +25,7 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
             url,
             app,
             isClient: true,
-            initialState: initialState
+            initialState
         })) || {});
     }
 
@@ -39,7 +39,7 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
             url,
             app,
             isClient: true,
-            initialState: initialState,
+            initialState,
             store,
             router
         });
@@ -48,6 +48,17 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
     // Store default behavior
     if(store && initialState.state) {
         store.replaceState(initialState.state);
+    }
+
+    if(options.rendered) {
+        await options.rendered({
+            url,
+            app,
+            isClient: true,
+            initialState,
+            store,
+            router
+        });
     }
 
     app.mount(

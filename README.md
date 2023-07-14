@@ -102,7 +102,7 @@ import {createPrefetch} from "@vuemod/prefetch";
 // ...
 export default ssr(App, {
     created({app, url, isClient, initialState}) {
-        const head = createHead();
+        const head = createHead(); // Use only this instance. To avoid singlton of state
         const router = createRouter();
         const store = createStore();
         const prefetch = createPrefetch();
@@ -126,6 +126,8 @@ export default ssr(App, {
 <p>
 
 - `created`: ({app, url, isClient, initialState}) - Hook that is called before each request, can be async. May return {router, store, head}
+- `mounted`: ({app, url, isClient, initialState}) - Hook that is called before each request, can be async. Fire after all internal operations, as router isReady
+- `rendered`: ({app, url, isClient, initialState}) - Hook that is called before each request, can be async. After ssr rendered or after replace state in client
 - `serializer`: Custom function for serialization initial state
 - `shouldPreload`: shouldPreload aka [shouldPreload](https://ssr.vuejs.org/api/#shouldpreload)
 - `shouldPrefetch`: shouldPrefetch aka [shouldPrefetch](https://ssr.vuejs.org/api/#shouldprefetch)

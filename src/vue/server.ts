@@ -21,11 +21,12 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
         const app = createSSRApp(App, options.rootProps);
         const serializer = options.serializer || serialize;
         const ssrContext: {
+            url: URL,
             isClient: boolean,
             initialState: Record<string, any>
             [key: string]: any
         } = {
-            url,
+            url: createUrl(url),
             isClient: false,
             initialState: {},
             ...extra,
@@ -33,7 +34,6 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
         const { head, router, store, inserts, context } =
         (options.created &&
             (await options.created({
-                url: createUrl(url),
                 app,
                 ...ssrContext,
             }))) ||
@@ -46,7 +46,6 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
         }
 
         options.mounted && (await options.mounted({
-            url: createUrl(url),
             app,
             router,
             store,
@@ -88,6 +87,14 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
                 headTags += links.length ? "\n" + links.join("\n") : "";
             }
         }
+
+        options.rendered && (await options.rendered({
+            app,
+            router,
+            store,
+            ...ssrContext,
+        }));
+
         const initialState = await serializer(ssrContext.initialState || {});
         const teleports = ssrContext?.teleports || {};
 

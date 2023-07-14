@@ -5,36 +5,9 @@ import {Store} from "vuex";
 import {SSRContext} from "@vue/server-renderer";
 import {Connect, ViteDevServer} from "vite";
 
-/**
- * Options for plugin
- *
- * ```typescript
- *  // vite.config.js
- *  import ssr from "vite-ssr-vue/plugin";
- *  import vue from "@vitejs/plugin-vue";
- *
- *  export default {
- *   plugins: [
- *       ssr({
- *           // PluginOptions
- *       }),
- *       vue(),
- *   ],
- * }
- * ```
- *
- */
 export interface PluginOptions {
-
-    /**
-     * plugin name, default: vite-ssr-vue
-     */
-    name?:string,
-
-    /**
-     * way to server entry point, if you want to use this separately
-     */
-    ssr?: string,
+    name?:string, // plugin name, default: vite-ssr-vue
+    ssr?: string, // way to server entry point, if you want to use this separately
 
     /**
      * way to custom entry points
@@ -46,22 +19,12 @@ export interface PluginOptions {
         [key: string]: string
     }
 
-    /**
-     * Custom serve middleware
-     * @param server - instance of ViteDevServer
-     * @param options - options extends PluginOptionsInternal
-     */
+    // Custom serve middleware
     serve?: (server: ViteDevServer, options: PluginOptionsInternal) => Connect.NextHandleFunction,
-
-    /**
-     * Any addition property
-     */
     [key: string]: any
 }
 
-/**
- * Plugin options with addition params
- */
+// Plugin options with addition params
 export interface PluginOptionsInternal extends PluginOptions {
     name:string,
     wrappers: {
@@ -69,78 +32,36 @@ export interface PluginOptionsInternal extends PluginOptions {
         server:string
     }
 }
-
-/**
- * Server side handler
- */
 export type SsrHandler = (
     App: Component,
     options?: CreatorOptions
 ) => SsrRenderer
-
-/**
- * Client side handler
- */
 export type ClientHandler = (
     App: Component,
     options?: CreatorOptions
 ) => Promise<void>
-
-/**
- * Application creator wrapper settings
- */
 export interface CreatorOptions {
-
-    /**
-     * Fire when app instance created
-     */
-    created?:Hook,
-
-    /**
-     * Fire after all internal operations, as router isReady
-     */
-    mounted?:Hook,
-
-    /**
-     * allows you to override the default serialization
-     * @param state
-     */
-    serializer?: (
+    created?:Hook, // Fire when app instance created
+    mounted?:Hook, // Fire after all internal operations, as router isReady
+    rendered?:Hook, // After ssr rendered or after replace state in client
+    serializer?: ( // allows you to override the default serialization
         state: any
     ) => any | Promise<any>,
 
-    /**
-     * shouldPreload aka [shouldPreload](https://ssr.vuejs.org/api/#shouldpreload)
-     * @param file
-     * @param type
-     */
+    // shouldPreload aka [shouldPreload](https://ssr.vuejs.org/api/#shouldpreload)
     shouldPreload?:(file: string, type: string) => boolean,
 
-    /**
-     * shouldPrefetch aka [shouldPrefetch](https://ssr.vuejs.org/api/#shouldprefetch)
-     * @param file
-     * @param type
-     */
+    // shouldPrefetch aka [shouldPrefetch](https://ssr.vuejs.org/api/#shouldprefetch)
     shouldPrefetch?:(file: string, type: string) => boolean,
-
-    /**
-     * vue mount options (for client side)
-     */
-    mount?: {
+    mount?: { // vue mount options (for client side)
         rootContainer?:any,
         isHydrate?: boolean,
         isSVG?: boolean
     },
-
-    /**
-     * vue root props
-     */
-    rootProps?:Record<string, any>|null
+    rootProps?:Record<string, any>|null // vue root props
 }
 
-/**
- * Wrapper for ssr render
- */
+// Wrapper for ssr render
 export type SsrRenderer = (
     url: string | URL,
     options?: {
@@ -149,9 +70,7 @@ export type SsrRenderer = (
     }
 ) => Promise<{ html: string; dependencies: string[] }>
 
-/**
- * Created hook params
- */
+// Created hook params
 export type Hook = (params: {
     app: App
     url: URL | Location
