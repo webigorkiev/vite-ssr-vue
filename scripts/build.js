@@ -43,16 +43,14 @@ const external = [
     await buildWrappers("./src/vue/client.ts", path.resolve(root, "./client.mjs"));
     await buildWrappers("./src/vue/server.ts", path.resolve(root, "./server.mjs"));
     log("Build wrappers");
-    await buildTypes(root);
+    for(const inputFile of ["./src/plugin.ts", "./src/vue/client.ts", "./src/vue/server.ts"]) {
+        await buildTypes(root, inputFile);
+    }
     log("Build types");
     log(chalk.green.bold("Build success"));
     await checkFileSize("./dist/client.js");
 })();
 
-/**
- * Build bundle by rollup
- * @returns {Promise<void>}
- */
 const buildPlugin = async(root) => {
     const bundle = await rollup.rollup({
         input: ["./src/plugin.ts"],
@@ -60,7 +58,7 @@ const buildPlugin = async(root) => {
         plugins: [
             aliasPlugin({
                 entries: [
-                    { find:/^@\/(.*)/, replacement: './src/$1.ts' }
+                    { find:/^@\/(.*)/, replacement: path.resolve('./src/$1.ts') }
                 ]
             }),
             esbuild({
@@ -76,10 +74,6 @@ const buildPlugin = async(root) => {
     await bundle.close();
 };
 
-/**
- * Build esm modules wrappers for clien and server bundle
- * @returns {Promise<void>}
- */
 const buildWrappers = async(input, output) => {
     const bundle = await rollup.rollup({
         input: input, // ["./src/vue/client.ts", "./src/vue/server.ts"],
@@ -87,7 +81,7 @@ const buildWrappers = async(input, output) => {
         plugins: [
             aliasPlugin({
                 entries: [
-                    { find:/^@\/(.*)/, replacement: './src/$1.ts' }
+                    { find:/^@\/(.*)/, replacement: path.resolve('./src/$1.ts') }
                 ]
             }),
             esbuild({
@@ -103,18 +97,14 @@ const buildWrappers = async(input, output) => {
     await bundle.close();
 };
 
-/**
- * Build types
- * @returns {Promise<void>}
- */
-const buildTypes = async(root) => {
+const buildTypes = async(root, input) => {
     const bundle = await rollup.rollup({
-        input: ["./src/plugin.ts", "./src/vue/client.ts", "./src/vue/server.ts"],
+        input,
         external,
         plugins: [
             aliasPlugin({
                 entries: [
-                    { find:/^@\/(.*)/, replacement: './src/$1.ts' }
+                    { find:/^@\/(.*)/, replacement: path.resolve('./src/$1.ts') }
                 ]
             }),
             dts()
@@ -127,11 +117,6 @@ const buildTypes = async(root) => {
     await bundle.close();
 };
 
-/**
- * Check size of file
- * @param filePath
- * @returns {Promise<void>}
- */
 const checkFileSize = async(filePath) => {
 
     if(!fs.existsSync(filePath)) {

@@ -1,7 +1,5 @@
-import {fetch, testsConfig} from "../scripts/jest.setup";
-
 describe("SSR", () => {
-    const url = new URL(testsConfig.host);
+    const url = new URL("http://localhost:3000");
 
     it("ssr 200", async() => {
         const response = await fetch(url.toString());
@@ -16,16 +14,4 @@ describe("SSR", () => {
         expect(body).toContain("Hello World!");
         expect(response.ok).toEqual(true);
     });
-});
-
-describe("Client", () => {
-    beforeAll(async() => {
-        await page.goto(testsConfig.host);
-    });
-    it(`should be titled "Test vite-ssr-vue app"`, () => {
-        expect(page.title()).resolves.toMatch("Test vite-ssr-vue app");
-    });
-    it(`should display "Hello World!" text on page`, () => {
-        expect(page.evaluate(() => document.body.innerHTML)).resolves.toMatch("Hello World!");
-    });
-});
+})

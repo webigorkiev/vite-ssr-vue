@@ -10,18 +10,20 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "noImplicitAny": true,
+    "strictFunctionTypes": false,
     "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": [
       "esnext",
-      "dom",
+      "dom"
     ],
     "types": [
-      "node",
       "vite/client",
-      "@types/jest",
-      "puppeteer",
-      "jest-environment-puppeteer",
-      "expect-puppeteer"
+      "node",
     ],
     "baseUrl": ".",
     "paths": {
@@ -35,6 +37,10 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "node_modules/@types/node/**/*.d.ts"
+    "tests/*.ts",
+    "node_modules/vitest/globals.d.ts"
+  ],
+  "exclude": [
+    "dist"
   ]
 }
