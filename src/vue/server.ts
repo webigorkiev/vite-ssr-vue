@@ -57,7 +57,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             ssrContext.initialState.state = store.state;
         }
 
-        const body = inserts?.body || await renderToString(app, Object.assign(ssrContext, context || {}));
+        const body = inserts?.body || await renderToString(app, Object.assign(ssrContext, context || {})); // add modules to ssrContext
         let headTags = inserts?.headTags || "",
             htmlAttrs = inserts?.htmlAttrs || "",
             bodyAttrs = inserts?.bodyAttrs || "",

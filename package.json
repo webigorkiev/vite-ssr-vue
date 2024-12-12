@@ -6,7 +6,7 @@
   "main": "./client.mjs",
   "types": "./client.d.ts",
   "scripts": {
-    "test:serve": "vite",
+    "test:serve": "vite --force",
     "test:build": "vite build",
     "dev": "node scripts/build.js --dev",
     "build": "yarn docs && node scripts/build.js",
