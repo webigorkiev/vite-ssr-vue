@@ -10,9 +10,6 @@ declare global {
     }
 }
 
-/**
- * Create client instance of vue app
- */
 const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
     const app = createSSRApp(App, options.rootProps);
     const serializer = options.serializer || unserialize;
@@ -47,7 +44,11 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
 
     // Store default behavior
     if(store && initialState.state) {
-        store.replaceState(initialState.state);
+        if(typeof store.replaceState === "function") {
+            store.replaceState(initialState.state); // Vuex
+        } else if(store.state?.value) {
+            store.state.value = initialState; // Pinia
+        }
     }
 
     if(options.rendered) {
