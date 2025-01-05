@@ -15,10 +15,10 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
     const serializer = options.serializer || unserialize;
     const initialState =  await serializer(window.__INITIAL_STATE__);
     const url = window.location;
-    let store, router;
+    let store, router, pinia;
 
     if(options.created) {
-        ({store, router} = (await options.created({
+        ({store, router, pinia} = (await options.created({
             url,
             app,
             isClient: true,
@@ -38,17 +38,17 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
             isClient: true,
             initialState,
             store,
+            pinia,
             router
         });
     }
 
     // Store default behavior
     if(store && initialState.state) {
-        if(typeof store.replaceState === "function") {
-            store.replaceState(initialState.state); // Vuex
-        } else if(store.state?.value) {
-            store.state.value = initialState; // Pinia
-        }
+        store.replaceState(initialState.state); // Vuex
+    }
+    if(pinia && initialState.pinia) {
+        pinia.state.value = initialState.pinia; // Pinia
     }
 
     if(options.rendered) {
@@ -58,6 +58,7 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
             isClient: true,
             initialState,
             store,
+            pinia,
             router
         });
     }

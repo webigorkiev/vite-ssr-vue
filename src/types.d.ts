@@ -4,6 +4,7 @@ import {Router} from "vue-router";
 import {Store} from "vuex";
 import {SSRContext} from "@vue/server-renderer";
 import {Connect, ViteDevServer} from "vite";
+import {Pinia} from "pinia";
 
 export interface PluginOptions {
     name?:string, // plugin name, default: vite-ssr-vue
@@ -91,6 +92,7 @@ type HookResponse = void | {
     head?: HeadClient,
     router?:Router,
     store?:Store<any>,
+    pinia?: Pinia,
     inserts?: {
         htmlAttrs?:string,
         headTags?:string,

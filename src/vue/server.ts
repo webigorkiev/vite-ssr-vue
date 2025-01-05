@@ -31,7 +31,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             initialState: {},
             ...extra,
         };
-        const { head, router, store, inserts, context } =
+        const { head, router, store, inserts, context, pinia } =
         (options.created &&
             (await options.created({
                 app,
@@ -49,12 +49,15 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             app,
             router,
             store,
+            pinia,
             ...ssrContext,
         }));
 
-        // store default behavior
         if(store) {
-            ssrContext.initialState.state = store.state;
+            ssrContext.initialState.state = store.state; // Vuex
+        }
+        if(pinia) {
+            ssrContext.initialState.pinia = pinia.state.value; //Pinia
         }
 
         const body = inserts?.body || await renderToString(app, Object.assign(ssrContext, context || {})); // add modules to ssrContext
@@ -92,6 +95,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             app,
             router,
             store,
+            pinia,
             ...ssrContext,
         }));
 
