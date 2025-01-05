@@ -26,6 +26,14 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
         })) || {});
     }
 
+    // Store default behavior
+    if(store && initialState.state) {
+        store.replaceState(initialState.state); // Vuex
+    }
+    if(pinia && initialState.pinia) {
+        pinia.state.value = initialState.pinia; // Pinia
+    }
+
     // Router default behavior
     if(router) {
         await router.isReady();
@@ -41,14 +49,6 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
             pinia,
             router
         });
-    }
-
-    // Store default behavior
-    if(store && initialState.state) {
-        store.replaceState(initialState.state); // Vuex
-    }
-    if(pinia && initialState.pinia) {
-        pinia.state.value = initialState.pinia; // Pinia
     }
 
     if(options.rendered) {
