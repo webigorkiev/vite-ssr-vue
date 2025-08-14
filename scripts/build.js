@@ -8,6 +8,7 @@ const {default:dts} = require("rollup-plugin-dts");
 const aliasPlugin = require("@rollup/plugin-alias");
 const chalk = require("chalk");
 const pkg = require("../package.json");
+const {OutputOptions} = require("rollup");
 const args = margv();
 
 const root = args.dev
@@ -38,7 +39,13 @@ const external = [
         spaces: 2
     });
     log("Copy files to dist dir");
-    await buildPlugin(root);
+    await buildWrappers("./src/plugin.ts", path.resolve(root, "./plugin.js"), {
+        format: "cjs",
+        exports: "auto"
+    });
+    await buildWrappers("./src/plugin.ts", path.resolve(root, "./plugin.mjs"), {
+        format: "esm"
+    });
     log("Build plugin");
     await buildWrappers("./src/vue/client.ts", path.resolve(root, "./client.mjs"));
     await buildWrappers("./src/vue/server.ts", path.resolve(root, "./server.mjs"));
@@ -51,30 +58,7 @@ const external = [
     await checkFileSize("./dist/client.js");
 })();
 
-const buildPlugin = async(root) => {
-    const bundle = await rollup.rollup({
-        input: ["./src/plugin.ts"],
-        external,
-        plugins: [
-            aliasPlugin({
-                entries: [
-                    { find:/^@\/(.*)/, replacement: path.resolve('./src/$1.ts') }
-                ]
-            }),
-            esbuild({
-                tsconfig: "./tsconfig.json"
-            })
-        ]
-    });
-    await bundle.write({
-        dir: root,
-        format: "cjs",
-        exports: "auto"
-    });
-    await bundle.close();
-};
-
-const buildWrappers = async(input, output) => {
+const buildWrappers = async(input, output, write = {}) => {
     const bundle = await rollup.rollup({
         input: input, // ["./src/vue/client.ts", "./src/vue/server.ts"],
         external,
@@ -90,9 +74,9 @@ const buildWrappers = async(input, output) => {
         ],
     });
     await bundle.write({
-        //dir: root,
         format: "esm",
         file: output,
+        ...write,
     });
     await bundle.close();
 };
