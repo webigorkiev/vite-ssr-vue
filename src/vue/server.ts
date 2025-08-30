@@ -5,19 +5,20 @@ import {serialize} from "@/utils/serialize";
 import {createUrl} from "@/utils/createUrl";
 import {renderHeadToString} from "@vueuse/head";
 export { ClientOnly } from "./components";
-import {findDependencies, renderPreloadLinks, renderPrefetchLinks} from "@/utils/html";
+import {
+    findDependencies, renderPreloadLinks, renderPrefetchLinks, findIndexHtmlDependencies,
+    renderPreloadLinksIndexHtml
+} from "@/utils/html";
 import {teleportsInject} from "@/utils/teleportsInject";
 import type {CreatorOptions} from "@/types.d";
 
 export type {Context, CreatorOptions};
 
-/**
- * Create client instance of vue app
- */
+// Server side rendering
 const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
 
     // manifest - for prod build
-    return async(url, {manifest, ...extra } = {}) => {
+    return async(url, {manifest, ssrManifest, ...extra } = {}) => {
         const app = createSSRApp(App, options.rootProps);
         const serializer = options.serializer || serialize;
         const ssrContext: {
@@ -31,6 +32,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             initialState: {},
             ...extra,
         };
+        ssrManifest = ssrManifest || manifest;
         const { head, router, store, inserts, context, pinia } =
         (options.created &&
             (await options.created({
@@ -71,10 +73,18 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             ({headTags, htmlAttrs, bodyAttrs} = await renderHeadToString(head));
         }
 
-        if(manifest) {
+        // Предзагрузка для стилей и js основной сборки
+        // Нужен manifest.json
+        if(options.preloadIndexHtml && manifest) {
+            const preloadIndexHtmlFiles = findIndexHtmlDependencies(manifest);
+            const links = renderPreloadLinksIndexHtml(preloadIndexHtmlFiles);
+            headTags += (links.length ? "\n" + links.join("\n"): "");
+        }
+
+        if(ssrManifest) {
             const {preload, prefetch} = findDependencies(
                 ssrContext.modules,
-                manifest,
+                ssrManifest,
                 options.shouldPreload,
                 options.shouldPrefetch
             );

@@ -23,7 +23,7 @@ const fileType = (file: string): "script"|"style"|"font"|"image"| "" => {
 // TODO основной чанк вроде /assets/index-Dl-OT3Uw.js и /assets/index-DM2ukRVC.css отсутствует в манифесте
 export const findDependencies = (
     modules: string[],
-    manifest: Record<string, string[]>,
+    ssrManifest: Record<string, string[]>,
     shouldPreload?:(file: string, type: string) => boolean,
     shouldPrefetch?:(file: string, type: string) => boolean
 ): {
@@ -34,7 +34,7 @@ export const findDependencies = (
     const prefetch = new Set<string>();
 
     for(const id of modules || []) {
-        for(const file of manifest[id] || []) {
+        for(const file of ssrManifest[id] || []) {
             const asType = fileType(file);
 
             // by default only scripts or css
@@ -49,8 +49,8 @@ export const findDependencies = (
         }
     }
 
-    for(const id of Object.keys(manifest)) {
-        for(const file of manifest[id]) {
+    for(const id of Object.keys(ssrManifest)) {
+        for(const file of ssrManifest[id]) {
             if(!preload.has(file)) {
                 const asType = fileType(file);
 
@@ -73,7 +73,7 @@ export const findDependencies = (
 
 // TODO разобраться с типами файлов
 export const renderPreloadLinks = (files: string[]): Array<string> => {
-    const link = [];
+    const links = [];
 
     for(const file of files || []) {
         const asType = fileType(file);
@@ -81,25 +81,21 @@ export const renderPreloadLinks = (files: string[]): Array<string> => {
 
         //  Тут реч идет о динамических зависимостях (мы загружаем то, что зависит от роута)
         if(asType === "script") {
-            link.push(`<link rel="modulepreload" crossorigin href="${file}">`); // Правильно (основной файл js подключает уже готовые модули)
+            links.push(`<link rel="modulepreload" crossorigin href="${file}">`); // Правильно (основной файл js подключает уже готовые модули)
         } else if(asType === "style") {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preload
-            link.push(`<link rel="stylesheet" href="${file}">`); // TODO Не правильно, просто подключается файл // Возможно так просто быстрее
+            links.push(`<link rel="stylesheet" href="${file}">`); // TODO Не правильно, просто подключается файл // Возможно так просто быстрее
         } else if(asType === "font") {
-            link.push(`<link rel="stylesheet" href="${file}" type="font/${ext}" crossorigin>`); // TODO Не правильно // Скорее всего шрифт так и не загрузится
+            links.push(`<link rel="stylesheet" href="${file}" type="font/${ext}" crossorigin>`); // TODO Не правильно // Скорее всего шрифт так и не загрузится
         } else {
-            link.push(`<link rel="stylesheet" href="${file}">`); // Определяются типы "script"|"style"|"font"|"image" // TODO типы не расширяемые
+            links.push(`<link rel="stylesheet" href="${file}">`); // Определяются типы "script"|"style"|"font"|"image" // TODO типы не расширяемые
         }
     }
 
-    return link;
+    return links;
 };
 
-/**
- * Form Prefetch links
- * @param files
- * @returns array of strings html
- */
+// HTML for prefetch links
 export const renderPrefetchLinks = (files: string[]): Array<string> => {
     const link = [];
 
@@ -109,3 +105,27 @@ export const renderPrefetchLinks = (files: string[]): Array<string> => {
 
     return link;
 };
+
+// Основные чанки для index.html
+export const findIndexHtmlDependencies = (manifest: Record<string, any>,): string[] => {
+    const output: string[] = [];
+    const indexHtmlDependencies = manifest["index.html"] || {};
+    indexHtmlDependencies.file && output.push(indexHtmlDependencies.file); // Основной файл сборки
+    indexHtmlDependencies.css && indexHtmlDependencies.css.length && output.push(...indexHtmlDependencies.css);
+    return output;
+}
+
+export const renderPreloadLinksIndexHtml = (files: string[]) => {
+    const links = [];
+    for(const file of files || []) {
+        const asType = fileType(file);
+        if(asType === "script") {
+            links.push(`<link rel="modulepreload" crossorigin href="${file}">`); // Правильно (основной файл js подключает уже готовые модули)
+        } else if(asType === "style") {
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preload
+            links.push(`<link rel="preload" href="${file}" as="style">`);
+        }
+    }
+
+    return links;
+}

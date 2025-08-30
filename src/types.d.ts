@@ -59,14 +59,18 @@ export interface CreatorOptions {
         isHydrate?: boolean,
         isSVG?: boolean
     },
-    rootProps?:Record<string, any>|null // vue root props
+    rootProps?:Record<string, any>|null, // vue root props
+
+    // Добавляет предзгрузку для основной сборки и основных стилей
+    preloadIndexHtml?: boolean
 }
 
 // Wrapper for ssr render
 export type SsrRenderer = (
     url: string | URL,
     options?: {
-        manifest?: Record<string, string[]>,
+        manifest?: Record<string, string[]>, // ssrManifest если не указан ssrManifest
+        ssrManifest?: Record<string, string[]>, // Всегда ssrManifest
         [key: string]: any
     }
 ) => Promise<{ html: string; dependencies: string[] }>
