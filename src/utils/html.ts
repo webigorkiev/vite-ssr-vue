@@ -112,6 +112,12 @@ export const findIndexHtmlDependencies = (manifest: Record<string, any>,): strin
     const indexHtmlDependencies = manifest["index.html"] || {};
     indexHtmlDependencies.file && output.push(indexHtmlDependencies.file); // Основной файл сборки
     indexHtmlDependencies.css && indexHtmlDependencies.css.length && output.push(...indexHtmlDependencies.css);
+    // Файлы в манифесте без открывающего слеша
+    output.forEach((file, index) => {
+        if(!/^\//.test(file)) {
+            output[index] = `/${file}`;
+        }
+    })
     return output;
 }
 
