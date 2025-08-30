@@ -79,13 +79,14 @@ export const renderPreloadLinks = (files: string[]): Array<string> => {
         const asType = fileType(file);
         const ext = file.split(".").pop()?.toLowerCase() || "";
 
+        //  Тут реч идет о динамических зависимостях (мы загружаем то, что зависит от роута)
         if(asType === "script") {
             link.push(`<link rel="modulepreload" crossorigin href="${file}">`); // Правильно (основной файл js подключает уже готовые модули)
         } else if(asType === "style") {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preload
-            link.push(`<link rel="stylesheet" href="${file}">`); // Не правильно, просто подключается файл
+            link.push(`<link rel="stylesheet" href="${file}">`); // TODO Не правильно, просто подключается файл // Возможно так просто быстрее
         } else if(asType === "font") {
-            link.push(`<link rel="stylesheet" href="${file}" type="font/${ext}" crossorigin>`); // Не правильно
+            link.push(`<link rel="stylesheet" href="${file}" type="font/${ext}" crossorigin>`); // TODO Не правильно // Скорее всего шрифт так и не загрузится
         } else {
             link.push(`<link rel="stylesheet" href="${file}">`); // Определяются типы "script"|"style"|"font"|"image" // TODO типы не расширяемые
         }
