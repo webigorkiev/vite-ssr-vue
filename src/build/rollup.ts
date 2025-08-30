@@ -7,7 +7,7 @@ import type { RollupOutput, OutputAsset } from "rollup";
 import type {PluginOptionsInternal} from "@/types";
 import {entryFromTemplate} from "@/utils/entryFromTemplate";
 
-type BuildOptions = {
+export type BuildOptions = {
   clientOptions?: InlineConfig
   serverOptions?: InlineConfig & { packageJson?: Record<string, unknown> }
 }
@@ -32,10 +32,13 @@ export const rollupBuild = async(
     },
     clientOptions
   ) as NonNullable<BuildOptions["clientOptions"]>;
-  const clientResult = (await build(clientBuildOptions)) as RollupOutput;
+  const clientResult = (await build(clientBuildOptions)) as RollupOutput; // Все созданные файлы
   const indexHtml = clientResult.output.find(
     (file) => file.type === "asset" && file.fileName === "index.html"
   ) as OutputAsset;
+
+  // Уже в исходном HTML есть вставка на загрузку основного  чанк вроде /assets/index-Dl-OT3Uw.js и /assets/index-DM2ukRVC.css отсутствует в манифесте
+  // console.log(indexHtml.source as string); // Исходный HTML
 
   // -- SSR build
   const entry = options.ssr || entryFromTemplate(

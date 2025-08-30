@@ -49,10 +49,10 @@ export interface CreatorOptions {
         state: any
     ) => any | Promise<any>,
 
-    // shouldPreload aka [shouldPreload](https://ssr.vuejs.org/api/#shouldpreload)
+    // shouldPreload aka [shouldPreload](https://v2.ssr.vuejs.org/ru/api/#shouldpreload)
     shouldPreload?:(file: string, type: string) => boolean,
 
-    // shouldPrefetch aka [shouldPrefetch](https://ssr.vuejs.org/api/#shouldprefetch)
+    // shouldPrefetch aka [shouldPrefetch](https://v2.ssr.vuejs.org/ru/api/#shouldprefetch)
     shouldPrefetch?:(file: string, type: string) => boolean,
     mount?: { // vue mount options (for client side)
         rootContainer?:any,

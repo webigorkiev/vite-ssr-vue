@@ -1,16 +1,13 @@
 import type {Plugin, Connect, ResolvedConfig, UserConfig} from "vite";
 import {createHandler} from "./serve/handler";
-import {rollupBuild} from "./build/rollup";
+import {type BuildOptions, rollupBuild} from "./build/rollup";
 
 import type {PluginOptions, PluginOptionsInternal} from "./types";
 export type {PluginOptions, PluginOptionsInternal};
 
 
-/**
- * Vite plugin vite-ssr-vue
- * @param opt plugin options
- */
-export default (opt:PluginOptions = {}): Plugin => {
+// Vite plugin vite-ssr-vue
+export default (opt:PluginOptions = {}, buildOptions: BuildOptions = {}): Plugin => {
     const options = opt as PluginOptionsInternal;
     options.name = options.name || "vite-ssr-vue";
     options.wrappers = {
@@ -43,7 +40,7 @@ export default (opt:PluginOptions = {}): Plugin => {
 
                 // @ts-ignore
                 if(!config.build.isBuild) {
-                    await rollupBuild(config, options);
+                    await rollupBuild(config, options, buildOptions);
                     process.exit(0);
                 }
             } else {

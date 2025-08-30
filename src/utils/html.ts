@@ -18,14 +18,9 @@ const fileType = (file: string): "script"|"style"|"font"|"image"| "" => {
     return "";
 };
 
-/**
- * Find addition dependencies
- * @param modules
- * @param manifest
- * @param shouldPreload user want to controll what preload
- * @param shouldPrefetch user whant to control what prefatch
- * @returns files dependency
- */
+// Find addition dependencies
+// TODO находит только динамические зависимости
+// TODO основной чанк вроде /assets/index-Dl-OT3Uw.js и /assets/index-DM2ukRVC.css отсутствует в манифесте
 export const findDependencies = (
     modules: string[],
     manifest: Record<string, string[]>,
@@ -76,11 +71,7 @@ export const findDependencies = (
     return {preload: [...preload], prefetch: [...prefetch]};
 };
 
-/**
- * Form preloaded links
- * @param files
- * @returns array of strings html
- */
+// TODO разобраться с типами файлов
 export const renderPreloadLinks = (files: string[]): Array<string> => {
     const link = [];
 
@@ -89,13 +80,14 @@ export const renderPreloadLinks = (files: string[]): Array<string> => {
         const ext = file.split(".").pop()?.toLowerCase() || "";
 
         if(asType === "script") {
-            link.push(`<link rel="modulepreload" crossorigin href="${file}">`);
+            link.push(`<link rel="modulepreload" crossorigin href="${file}">`); // Правильно (основной файл js подключает уже готовые модули)
         } else if(asType === "style") {
-            link.push(`<link rel="stylesheet" href="${file}">`);
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preload
+            link.push(`<link rel="stylesheet" href="${file}">`); // Не правильно, просто подключается файл
         } else if(asType === "font") {
-            link.push(`<link rel="stylesheet" href="${file}" type="font/${ext}" crossorigin>`);
+            link.push(`<link rel="stylesheet" href="${file}" type="font/${ext}" crossorigin>`); // Не правильно
         } else {
-            link.push(`<link rel="stylesheet" href="${file}">`);
+            link.push(`<link rel="stylesheet" href="${file}">`); // Определяются типы "script"|"style"|"font"|"image" // TODO типы не расширяемые
         }
     }
 
