@@ -39,19 +39,30 @@ const external = [
         spaces: 2
     });
     log("Copy files to dist dir");
-    await buildWrappers("./src/plugin.ts", path.resolve(root, "./plugin.js"), {
+    await buildWrappers("./src/plugin.ts", path.resolve(root, "./plugin/index.js"), {
         format: "cjs",
         exports: "auto"
     });
-    await buildWrappers("./src/plugin.ts", path.resolve(root, "./plugin.mjs"), {
+    await buildWrappers("./src/plugin.ts", path.resolve(root, "./plugin/index.mjs"), {
         format: "esm"
     });
     log("Build plugin");
-    await buildWrappers("./src/vue/client.ts", path.resolve(root, "./client.mjs"));
-    await buildWrappers("./src/vue/server.ts", path.resolve(root, "./server.mjs"));
+    await buildWrappers("./src/vue/client.ts", path.resolve(root, "./client/index.mjs"));
+    await buildWrappers("./src/vue/server.ts", path.resolve(root, "./server/index.mjs"));
     log("Build wrappers");
-    for(const inputFile of ["./src/plugin.ts", "./src/vue/client.ts", "./src/vue/server.ts"]) {
-        await buildTypes(root, inputFile);
+    for(const inputFile of [
+        ["./src/plugin.ts", path.resolve(root, "./plugin/index.d.ts"), path.resolve(root, "./plugin/package.json")],
+        ["./src/vue/client.ts", path.resolve(root, "./client/index.d.ts"), path.resolve(root, "./client/package.json")],
+        ["./src/vue/server.ts", path.resolve(root, "./server/index.d.ts"), path.resolve(root, "./server/package.json")]
+    ]) {
+        await buildTypes(inputFile[0], inputFile[1]);
+        await fs.writeJson(inputFile[2], {
+            "main": "./index.js",
+            "module": "./index.mjs",
+            "types": "./index.d.ts"
+        }, {
+            spaces: 2
+        });
     }
     log("Build types");
     log(chalk.green.bold("Build success"));
@@ -81,7 +92,7 @@ const buildWrappers = async(input, output, write = {}) => {
     await bundle.close();
 };
 
-const buildTypes = async(root, input) => {
+const buildTypes = async(input, output) => {
     const bundle = await rollup.rollup({
         input,
         external,
@@ -95,8 +106,8 @@ const buildTypes = async(root, input) => {
         ]
     });
     await bundle.write({
-        dir: root,
-        format: "esm"
+        format: "esm",
+        file: output,
     });
     await bundle.close();
 };
