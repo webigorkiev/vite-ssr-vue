@@ -99,6 +99,7 @@ type HookResponse = void | {
     pinia?: Pinia,
     inserts?: {
         htmlAttrs?:string,
+        headPreloadTags?:string, // Добавляются в начало head
         headTags?:string, // Добавляются в конец head
         bodyAttrs?:string,
         body?:string,

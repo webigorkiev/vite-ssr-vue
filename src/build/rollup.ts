@@ -36,7 +36,7 @@ export const rollupBuild = async(
     const clientResult = (await build(clientBuildOptions)) as RollupOutput; // Все созданные файлы
     const indexHtml = clientResult.output.find(
         (file) => file.type === "asset" && file.fileName === "index.html"
-    ) as OutputAsset;
+    ) as OutputAsset; // HTML уже с внедренными зависимостями js и css
 
     // Уже в исходном HTML есть вставка на загрузку основного  чанк вроде /assets/index-Dl-OT3Uw.js и /assets/index-DM2ukRVC.css отсутствует в манифесте
     // console.log(indexHtml.source as string); // Исходный HTML

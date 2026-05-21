@@ -64,6 +64,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
 
         const body = inserts?.body || await renderToString(app, Object.assign(ssrContext, context || {})); // add modules to ssrContext
         let headTags = inserts?.headTags || "",
+            headPreloadTags = inserts?.headPreloadTags || "",
             htmlAttrs = inserts?.htmlAttrs || "",
             bodyAttrs = inserts?.bodyAttrs || "",
             dependencies = inserts?.dependencies || [];
@@ -74,11 +75,10 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
         }
 
         // Предзагрузка для стилей и js основной сборки
-        // TODO она оказывается после основной загрузки
         if(options.preloadIndexHtml && manifest) {
             const preloadIndexHtmlFiles = findIndexHtmlDependencies(manifest); // Основной файл js/css для index.html
             const links = renderPreloadLinksIndexHtml(preloadIndexHtmlFiles);
-            headTags += (links.length ? "\n" + links.join("\n"): "");
+            headPreloadTags += (links.length ? "\n" + links.join("\n"): "");
         }
 
         if(ssrManifest) {
@@ -92,12 +92,12 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
 
             if(preload.length > 0) {
                 const links = renderPreloadLinks(preload);
-                headTags += (links.length ? "\n" + links.join("\n"): "");
+                headPreloadTags += (links.length ? "\n" + links.join("\n"): "");
             }
 
             if(prefetch.length > 0) {
                 const links = renderPrefetchLinks(prefetch);
-                headTags += links.length ? "\n" + links.join("\n") : "";
+                headPreloadTags += links.length ? "\n" + links.join("\n") : "";
             }
         }
 
@@ -117,6 +117,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             htmlAttrs,
             bodyAttrs,
             headTags,
+            headPreloadTags,
             body,
             initialState,
             dependencies,
