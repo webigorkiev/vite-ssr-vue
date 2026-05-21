@@ -1,5 +1,6 @@
 const defaultHtmlParts = [
     "headTags",
+    "headPreloadTags",
     "body",
     "bodyAttrs",
     "htmlAttrs",
