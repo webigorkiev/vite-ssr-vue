@@ -1,7 +1,3 @@
-/**
- * Get file type by extension
- * @param file
- */
 const fileType = (file: string): "script"|"style"|"font"|"image"| "" => {
     const ext = file.split(".").pop()?.toLowerCase() || "";
 
@@ -19,8 +15,6 @@ const fileType = (file: string): "script"|"style"|"font"|"image"| "" => {
 };
 
 // Find addition dependencies
-// TODO находит только динамические зависимости
-// TODO основной чанк вроде /assets/index-Dl-OT3Uw.js и /assets/index-DM2ukRVC.css отсутствует в манифесте
 export const findDependencies = (
     modules: string[],
     ssrManifest: Record<string, string[]>,
@@ -48,27 +42,44 @@ export const findDependencies = (
             preload.add(file);
         }
     }
-
     for(const id of Object.keys(ssrManifest)) {
         for(const file of ssrManifest[id]) {
             if(!preload.has(file)) {
                 const asType = fileType(file);
-
-                // by default no prefetch links
-                if(!shouldPrefetch) {
+                if(!shouldPrefetch) { // by default no prefetch links
                     continue;
                 }
-
                 if(shouldPrefetch && !shouldPrefetch(file, asType)) {
                     continue;
                 }
-
                 prefetch.add(file);
             }
         }
     }
+    // Сортировка файлов по типу
+    const priority: Record<string, number> = {
+        "font": 1,
+        "style": 2,
+        "image": 3,
+        "script": 4,
+        "": 5
+    };
+    const preloadSorted = [...preload].sort((a, b) => {
+        const typeA = fileType(a);
+        const typeB = fileType(b);
+        const priorityA = priority[typeA] ?? 99;
+        const priorityB = priority[typeB] ?? 99;
+        return priorityA - priorityB;
+    });
+    const prefetchSorted = [...prefetch].sort((a, b) => {
+        const typeA = fileType(a);
+        const typeB = fileType(b);
+        const priorityA = priority[typeA] ?? 99;
+        const priorityB = priority[typeB] ?? 99;
+        return priorityA - priorityB;
+    });
 
-    return {preload: [...preload], prefetch: [...prefetch]};
+    return {preload: preloadSorted, prefetch: prefetchSorted};
 };
 
 // TODO разобраться с типами файлов
@@ -110,8 +121,8 @@ export const renderPrefetchLinks = (files: string[]): Array<string> => {
 export const findIndexHtmlDependencies = (manifest: Record<string, any>,): string[] => {
     const output: string[] = [];
     const indexHtmlDependencies = manifest["index.html"] || {};
-    indexHtmlDependencies.file && output.push(indexHtmlDependencies.file); // Основной файл сборки
-    indexHtmlDependencies.css && indexHtmlDependencies.css.length && output.push(...indexHtmlDependencies.css);
+    indexHtmlDependencies.css && indexHtmlDependencies.css.length && output.push(...indexHtmlDependencies.css); // Сначала всегда css
+    indexHtmlDependencies.file && output.push(indexHtmlDependencies.file);
     // Файлы в манифесте без открывающего слеша
     output.forEach((file, index) => {
         if(!/^\//.test(file)) {

@@ -9,18 +9,15 @@ const defaultHtmlParts = [
     {} as Record<string, string>
 );
 
-/**
- * Replace replace inserts to the value or!!! to the name of params
- * @param template
- * @param parts
- * @returns html strings
- */
+// TODO проблема что мы внедряем дополнительные head теги + в </head>
+// Это после загрузки основного js и стилей
+// HTML уже дополнен и мы добавляем только в конец </head>
 export const buildHtml = (template: string, parts = defaultHtmlParts): string => {
 
     return template
         .replace("<html", `<html${parts.htmlAttrs}`)
         .replace("<body", `<body${parts.bodyAttrs}`)
-        .replace("</head>", `${parts.headTags ? `${parts.headTags}\n`: ""}</head>`)
+        .replace("</head>", `${parts.headTags ? `${parts.headTags}\n`: ""}</head>`) // TODO
         .replace(
             "<div id=\"app\"></div>",
 

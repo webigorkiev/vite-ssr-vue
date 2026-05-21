@@ -74,9 +74,9 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
         }
 
         // Предзагрузка для стилей и js основной сборки
-        // Нужен manifest.json
+        // TODO она оказывается после основной загрузки
         if(options.preloadIndexHtml && manifest) {
-            const preloadIndexHtmlFiles = findIndexHtmlDependencies(manifest);
+            const preloadIndexHtmlFiles = findIndexHtmlDependencies(manifest); // Основной файл js/css для index.html
             const links = renderPreloadLinksIndexHtml(preloadIndexHtmlFiles);
             headTags += (links.length ? "\n" + links.join("\n"): "");
         }
