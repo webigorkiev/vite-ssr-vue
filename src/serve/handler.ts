@@ -65,7 +65,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 headers: req.headers as Record<string, string|string[]>,
                 responseHeaders: {"content-type": "text/html; charset=utf-8"},
             };
-            const htmlParts = await render(req.originalUrl, {req, res: response, context});
+            const htmlParts = await render(url, {req, res: response, context});
             const html = teleportsInject(buildHtml(template, htmlParts),htmlParts.teleports);
             response.statusCode = context.statusCode;
             Object.keys(context.responseHeaders).map(key => response.setHeader(key, context.responseHeaders[key]));
