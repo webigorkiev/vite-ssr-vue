@@ -6,3 +6,4 @@ dist-ssr
 *.local
 example/dist
 coverage
+.npmrc

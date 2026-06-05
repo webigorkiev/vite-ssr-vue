@@ -8,6 +8,7 @@ import {teleportsInject} from "@/utils/teleportsInject";
 import {entryFromTemplate} from "@/utils/entryFromTemplate";
 import {cookieParse} from "@/utils/cookieParser";
 import * as http from "http";
+import {getClientIp} from "@/utils/getClientIp";
 
 const readIndexTemplate = async(server: ViteDevServer, url: string) => await server.transformIndexHtml(
     url,
@@ -59,7 +60,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 protocol,
                 url,
                 cookies: cookieParse(headers["cookie"]),
-                ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress, // TODO
+                ip: getClientIp(req),
                 memcache: null,
                 statusCode: 200,
                 headers: req.headers as Record<string, string|string[]>,

@@ -1,3 +1,7 @@
+## [1.2.5]
+
+* Fix the issue with ip ::1 and some other variants
+
 ## [1.2.4]
 
 * Switch url to URL object
