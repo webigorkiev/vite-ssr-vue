@@ -67,7 +67,7 @@ export interface CreatorOptions {
 
 // Wrapper for ssr render
 export type SsrRenderer = (
-    url: string | URL,
+    url: URL,
     options?: {
         manifest?: Record<string, string[]>, // ssrManifest если не указан ssrManifest
         ssrManifest?: Record<string, string[]>, // Всегда ssrManifest
@@ -77,12 +77,12 @@ export type SsrRenderer = (
 
 // Created hook params
 export type Hook = (params: {
-    app: App
-    url: URL | Location
-    isClient: boolean
+    app: App,
+    url: URL,
+    isClient: boolean,
     initialState: Record<string, any>,
     context?: Context,
-    [key: string]: any
+    [key: string]: any,
 }) => HookResponse | Promise<HookResponse>
 
 /**

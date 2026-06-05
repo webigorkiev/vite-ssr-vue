@@ -1,3 +1,7 @@
+## [1.2.4]
+
+* Switch url to URL object
+
 ## [1.2.3]
 
 * Resolve issue with the url in the server entry point

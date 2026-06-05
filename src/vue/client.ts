@@ -14,7 +14,7 @@ const createViteSsrVue:ClientHandler|SsrHandler = async(App, options= {}) => {
     const app = createSSRApp(App, options.rootProps);
     const serializer = options.serializer || unserialize;
     const initialState =  await serializer(window.__INITIAL_STATE__);
-    const url = window.location;
+    const url = new URL(window.location.href);
     let store, router, pinia;
 
     if(options.created) {

@@ -59,7 +59,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 protocol,
                 url,
                 cookies: cookieParse(headers["cookie"]),
-                ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress,
+                ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress, // TODO
                 memcache: null,
                 statusCode: 200,
                 headers: req.headers as Record<string, string|string[]>,
