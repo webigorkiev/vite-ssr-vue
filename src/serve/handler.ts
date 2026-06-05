@@ -51,12 +51,12 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             const ssrModule = await server.ssrLoadModule(entryResolve);
             const render = ssrModule.default || ssrModule;
             const headers = req.headers as Record<string, any>;
-            const protocol = server.config?.server?.https ? "https" : "";
-            const hostname = headers.host || "";
+            const protocol = headers["x-forwarded-proto"] || (server.config?.server?.https ? "https" : "http"); // По параметру Vite
+            const hostname = headers.host || ""; // На dev просто  = ""
             const url = `${protocol}://${hostname}${req.originalUrl}`;
             const context: Context = {
                 hostname,
-                protocol: headers["x-forwarded-proto"] || protocol || "http",
+                protocol,
                 url,
                 cookies: cookieParse(headers["cookie"]),
                 ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress,
