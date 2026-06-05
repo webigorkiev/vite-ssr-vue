@@ -1,6 +1,7 @@
-## [1.2.2]
+## [1.2.3]
 
 * Resolve issue with the url in the server entry point
+* Resolve issue with the url in the server entry point SSR
 
 ## [1.2.1]
 

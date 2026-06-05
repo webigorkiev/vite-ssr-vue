@@ -21,13 +21,14 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
     return async(url, {manifest, ssrManifest, ...extra } = {}) => {
         const app = createSSRApp(App, options.rootProps);
         const serializer = options.serializer || serialize;
+        const urlObj = createUrl(url);
         const ssrContext: {
             url: URL,
             isClient: boolean,
             initialState: Record<string, any>
             [key: string]: any
         } = {
-            url: createUrl(url), // TODO всегда есть hostname и протокол
+            url: urlObj,
             isClient: false,
             initialState: {},
             ...extra,
@@ -42,8 +43,8 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
         {};
 
         // Router default behavior
-        if(router && url) {
-            await router.push(url);
+        if(router) {
+            await router.push(urlObj.pathname);
             await router.isReady();
         }
 
