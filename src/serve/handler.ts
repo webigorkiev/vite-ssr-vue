@@ -9,22 +9,11 @@ import {entryFromTemplate} from "@/utils/entryFromTemplate";
 import {cookieParse} from "@/utils/cookieParser";
 import * as http from "http";
 
-/**
- * Read and transform index.html
- * @param server vite dev server instance
- * @param url for current request
- */
 const readIndexTemplate = async(server: ViteDevServer, url: string) => await server.transformIndexHtml(
     url,
     await fs.readFile(path.resolve(server.config.root, "index.html"), "utf-8")
 );
 
-/**
- * Replace client alias to server
- * @param server
- * @param name
- * @param wrapper
- */
 const replaceEnteryPoint = (server: ViteDevServer, name: string, wrapper: string) => {
     const alias = server.config.resolve.alias.find(
         item => typeof item.replacement === "string" && item.replacement.indexOf(name) === 0
@@ -35,11 +24,6 @@ const replaceEnteryPoint = (server: ViteDevServer, name: string, wrapper: string
     }
 };
 
-/**
- * @param server Vite dev server instance
- * @param options plugin options
- * @returns handler for dev server middleware
- */
 export const createHandler = (server: ViteDevServer, options: PluginOptionsInternal): Connect.NextHandleFunction => {
 
     return async(req, res, next) => {
@@ -64,19 +48,21 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 throw new Error("Entry point for ssr not found");
             }
             const entryResolve = path.join(server.config.root, entry);
-            const ssrMoudile = await server.ssrLoadModule(entryResolve);
-            const render = ssrMoudile.default || ssrMoudile;
+            const ssrModule = await server.ssrLoadModule(entryResolve);
+            const render = ssrModule.default || ssrModule;
             const headers = req.headers as Record<string, any>;
             const protocol = server.config?.server?.https ? "https" : "";
+            const hostname = headers.host || "";
+            const url = `${protocol}://${hostname}${req.originalUrl}`;
             const context: Context = {
-                hostname: headers.host,
+                hostname,
                 protocol: headers["x-forwarded-proto"] || protocol || "http",
-                url: req.originalUrl || "/",
+                url,
                 cookies: cookieParse(headers["cookie"]),
                 ip: headers["x-forwarded-for"]?.split(/, /)?.[0] || req.socket.remoteAddress,
                 memcache: null,
                 statusCode: 200,
-                headers: req.headers,
+                headers: req.headers as Record<string, string|string[]>,
                 responseHeaders: {"content-type": "text/html; charset=utf-8"},
             };
             const htmlParts = await render(req.originalUrl, {req, res: response, context});

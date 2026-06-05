@@ -1,29 +1,22 @@
-/**
- * Parse coockie string to object
- * @param str
- */
-export const cookieParse =  (str: string| undefined): Record<string, any> => {
-
+// Parse cookie to object
+export const cookieParse =  (str: string| undefined): Record<string, string> => {
     if(!str) {
         return  {};
     }
-
-    return str.split(/; */).reduce((obj: Record<string, any>, str) => {
-
-        if(str === "") {
-            return obj;
-        }
-        const eq = str.indexOf('=');
-        const key: string = eq > 0 ? str.slice(0, eq) : str;
-        let val = eq > 0 ? str.slice(eq + 1) : null;
-
-        if(val != null) {
+    return str
+        .split(/; */)
+        .reduce((obj, part) => {
+            const eq = part.indexOf('=');
+            const key = (eq >= 0 ? part.slice(0, eq) : part).trim();
+            if(!key) {
+                return obj;
+            }
+            const val = (eq >= 0 ? part.slice(eq + 1) : "").trim();
             try {
-                val = decodeURIComponent(val);
-            } catch(ex) { /* pass */ }
-        }
-        obj[key] = val;
-
-        return obj;
-    }, {});
+                obj[key] = decodeURIComponent(val);
+            } catch {
+                obj[key] = val;
+            }
+            return obj;
+        }, {} as Record<string, string>);
 };

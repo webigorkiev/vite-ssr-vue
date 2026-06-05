@@ -27,7 +27,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
             initialState: Record<string, any>
             [key: string]: any
         } = {
-            url: createUrl(url),
+            url: createUrl(url), // TODO всегда есть hostname и протокол
             isClient: false,
             initialState: {},
             ...extra,

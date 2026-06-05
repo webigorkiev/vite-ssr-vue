@@ -114,53 +114,13 @@ type HookResponse = void | {
  * The context will go to the created hook parameters of the plugin
  */
 export interface Context {
-
-    /**
-     * hostname (example.com)
-     * as express req.hostname
-     */
     hostname: string,
-
-    /**
-     * protocol (http)
-     * as express req.protocol
-     */
     protocol: string,
-
-    /**
-     * string current url
-     * /search?q=something
-     */
-    url: string,
-
-    /**
-     * this property is an object that contains cookies sent by the request
-     */
-    cookies: Record<string, any>,
-
-    /**
-     * remote address (127.0.0.1)
-     */
-    ip: string,
-
-    /**
-     * special property for usin memcached
-     */
-    memcache: number|null,
-
-    /**
-     * response status code
-     * default 200
-     */
-    statusCode: number,
-
-    /**
-     * Request headers
-     */
-    headers: Record<string, any>,
-
-    /**
-     * Response headers
-     */
-    responseHeaders: Record<string, any>,
+    url: string, // /search?q=something // Содержит GET параметры
+    cookies: Record<string, string>,
+    ip: string, // remote address (127.0.0.1)
+    memcache: number|null, // special property for use memcached
+    statusCode: number, // default 200
+    headers: Record<string, string|string[]>,
+    responseHeaders: Record<string, any>, // Response headers
 }
