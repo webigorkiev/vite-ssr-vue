@@ -9,6 +9,7 @@ import {entryFromTemplate} from "@/utils/entryFromTemplate";
 import {cookieParse} from "@/utils/cookieParser";
 import * as http from "http";
 import {getClientIp} from "@/utils/getClientIp";
+import {genErrorPage} from "@/serve/genErrorPage";
 
 const readIndexTemplate = async(server: ViteDevServer, url: string) => await server.transformIndexHtml(
     url,
@@ -31,13 +32,30 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
         const response = res as http.ServerResponse & {redirect: (url: string, statusCode: 301|307) => void};
 
         if(req.method !== "GET" || !req.originalUrl) {
-
-            return next();
+            return next(); // Следующий обработчик
         }
         response.redirect = (url: string, statusCode: 301|307 = 307) => {
             response.statusCode = statusCode;
             response.setHeader("location", url);
             response.end();
+        };
+        const headers = req.headers as Record<string, any>;
+        const protocol = headers["x-forwarded-proto"] || (server.config?.server?.https ? "https" : "http"); // По параметру Vite
+        const hostname = headers.host || ""; // На dev просто  = ""
+        const url = `${protocol}://${hostname}${req.originalUrl}`;
+        let ssrError:any = null;
+        const context: Context = {
+            hostname,
+            protocol,
+            url,
+            cookies: cookieParse(headers["cookie"]),
+            ip: getClientIp(req),
+            memcache: null,
+            statusCode: 200,
+            headers: req.headers as Record<string, string|string[]>,
+            responseHeaders: {"content-type": "text/html; charset=utf-8"},
+            // SSR Error
+            onError: (err: any) => ssrError = err
         };
 
         try {
@@ -51,28 +69,26 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             const entryResolve = path.join(server.config.root, entry);
             const ssrModule = await server.ssrLoadModule(entryResolve);
             const render = ssrModule.default || ssrModule;
-            const headers = req.headers as Record<string, any>;
-            const protocol = headers["x-forwarded-proto"] || (server.config?.server?.https ? "https" : "http"); // По параметру Vite
-            const hostname = headers.host || ""; // На dev просто  = ""
-            const url = `${protocol}://${hostname}${req.originalUrl}`;
-            const context: Context = {
-                hostname,
-                protocol,
-                url,
-                cookies: cookieParse(headers["cookie"]),
-                ip: getClientIp(req),
-                memcache: null,
-                statusCode: 200,
-                headers: req.headers as Record<string, string|string[]>,
-                responseHeaders: {"content-type": "text/html; charset=utf-8"},
-            };
             const htmlParts = await render(url, {req, res: response, context});
+            if(ssrError) {
+                throw ssrError;
+            }
             const html = teleportsInject(buildHtml(template, htmlParts),htmlParts.teleports);
             response.statusCode = context.statusCode;
-            Object.keys(context.responseHeaders).map(key => response.setHeader(key, context.responseHeaders[key]));
+            Object.keys(context.responseHeaders).forEach(key => response.setHeader(key, context.responseHeaders[key]));
             response.end(html);
         } catch(e: any) {
             server.ssrFixStacktrace(e);
+            console.error('SSR Error:', e);
+
+            response.statusCode = 500;
+            response.setHeader("Content-Type", "text/html; charset=utf-8");
+            response.end(genErrorPage({
+                error: e,
+                req,
+                url,
+                context
+            }));
         } finally {
             replaceEnteryPoint(server, options.name, options.wrappers.client);
         }

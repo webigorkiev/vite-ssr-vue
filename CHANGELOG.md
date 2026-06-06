@@ -1,3 +1,7 @@
+## [1.2.6]
+
+* Add debug SSR error page
+
 ## [1.2.5]
 
 * Fix the issue with ip ::1 and some other variants

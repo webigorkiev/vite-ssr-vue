@@ -123,4 +123,7 @@ export interface Context {
     statusCode: number, // default 200
     headers: Record<string, string|string[]>,
     responseHeaders: Record<string, any>, // Response headers
+
+    // Переопределить обработчик ошибок
+    onError?: (err: any) => void,
 }
