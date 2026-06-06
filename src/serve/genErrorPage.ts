@@ -11,14 +11,14 @@ export function genErrorPage({ error, req, url, context }: ErrorPageOptions): st
     const messageShort = (error.message || '').slice(0, 50);
     const errorName = error.name || 'Error';
     const errorMessage = error.message || '';
-    const stackTrace = error.stack || 'Стек трейс отсутствует';
+    const stackTrace = error.stack || 'Stack trace is unavailable';
 
     const cookiesJson = JSON.stringify(context.cookies, null, 2);
     const headersJson = JSON.stringify(req.headers, null, 2);
 
     return `
     <!DOCTYPE html>
-    <html lang="ru">
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>💥 SSR Debugger: ${messageShort}</title>
@@ -125,13 +125,13 @@ export function genErrorPage({ error, req, url, context }: ErrorPageOptions): st
 
         <div class="grid">
             <div class="panel">
-                <div class="panel-title">Стек вызовов (Stack Trace)</div>
+                <div class="panel-title">Call Stack (Stack Trace)</div>
                 <pre><code>${stackTrace}</code></pre>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 25px;">
                 <div class="panel">
-                    <div class="panel-title">Данные запроса</div>
+                    <div class="panel-title">Request Data</div>
                     <table class="info-table">
                         <tr><td>URL</td><td style="color: var(--amber);">${url}</td></tr>
                         <tr><td>Method</td><td>${req.method || 'GET'}</td></tr>
