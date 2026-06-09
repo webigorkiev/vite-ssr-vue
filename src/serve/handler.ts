@@ -82,6 +82,9 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 String(e.code).toLowerCase() === "silent"
                 || e.silent
             ) {
+                try {
+                    response.end();
+                } catch {}
                 return;
             }
             server.ssrFixStacktrace(e);

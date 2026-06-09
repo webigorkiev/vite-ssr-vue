@@ -1,3 +1,7 @@
+## [1.2.9]
+
+* Add support for SSR Error silent
+
 ## [1.2.7]
 
 * Add debug SSR error page
