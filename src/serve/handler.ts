@@ -78,7 +78,10 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             Object.keys(context.responseHeaders).forEach(key => response.setHeader(key, context.responseHeaders[key]));
             response.end(html);
         } catch(e: any) {
-            if(String(e.code).toLowerCase() === "redirect") {
+            if(
+                String(e.code).toLowerCase() === "silent"
+                || e.silent
+            ) {
                 return;
             }
             server.ssrFixStacktrace(e);
