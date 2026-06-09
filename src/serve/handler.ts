@@ -78,9 +78,11 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
             Object.keys(context.responseHeaders).forEach(key => response.setHeader(key, context.responseHeaders[key]));
             response.end(html);
         } catch(e: any) {
+            if(String(e.code).toLowerCase() === "redirect") {
+                return;
+            }
             server.ssrFixStacktrace(e);
             console.error('SSR Error:', e);
-
             response.statusCode = 500;
             response.setHeader("Content-Type", "text/html; charset=utf-8");
             response.end(genErrorPage({
@@ -89,6 +91,7 @@ export const createHandler = (server: ViteDevServer, options: PluginOptionsInter
                 url,
                 context
             }));
+
         } finally {
             replaceEnteryPoint(server, options.name, options.wrappers.client);
         }
