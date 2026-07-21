@@ -7,7 +7,6 @@ export const ClientOnly: Component = {
         onMounted(() => {
             show.value = true;
         });
-
         return () => (show.value && slots.default ? slots.default() : null);
     },
 };

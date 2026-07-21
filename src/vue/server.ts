@@ -44,7 +44,7 @@ const createViteSsrVue:SsrHandler = (App, options: CreatorOptions = {}) => {
 
         // Router default behavior
         if(router) {
-            await router.push(urlObj.pathname);
+            await router.push(urlObj.pathname + urlObj.search);
             await router.isReady();
         }
 
